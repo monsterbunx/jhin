@@ -49,8 +49,8 @@ Cada capa es sourceable vía `curl-pipe`, sin instalación previa.
 ## Probar localmente
 
 ```sh
-git clone git@github.com:monsterbunx/jhin.git ~/proyectos/jhin
-cd ~/proyectos/jhin
+git clone git@github.com:monsterbunx/jhin.git
+cd jhin
 docker compose up -d        # debian:12 privileged + bind-mount ./scripts
 docker exec -it jhin bash   # entra al contenedor
 . <(curl -fsSL https://monsterbunx.github.io/jhin/go) es -v
