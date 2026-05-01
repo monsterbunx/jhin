@@ -55,8 +55,11 @@ apt --fix-broken install -y
 
 # DinD support: si corremos dentro de un contenedor, no hay systemd que arranque
 # dockerd tras el dpkg. Lo lanzamos en background y esperamos al socket.
+# Usa 'vfs' como storage-driver para evitar el conflicto overlay-sobre-overlay.
 if [ -f /.dockerenv ] || grep -qE 'docker|containerd' /proc/1/cgroup 2>/dev/null; then
-  if ! pgrep -x dockerd >/dev/null; then
+  if [ ! -S /var/run/docker.sock ]; then
+    mkdir -p /etc/docker
+    echo '{"storage-driver":"vfs"}' >/etc/docker/daemon.json
     nohup dockerd >/var/log/dockerd.log 2>&1 &
     for _ in $(seq 1 30); do
       [ -S /var/run/docker.sock ] && break
