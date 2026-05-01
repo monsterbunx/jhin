@@ -1,0 +1,7 @@
+# XT/ruby — carga klors + strings i18n de xtractor para el instalador ruby.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/ruby) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/ruby/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/ruby/es)
+unset _lang

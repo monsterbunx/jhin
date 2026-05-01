@@ -1,0 +1,7 @@
+# XT/bun — carga klors + strings i18n de xtractor para el instalador bun.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/bun) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/bun/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/bun/es)
+unset _lang

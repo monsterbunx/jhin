@@ -1,0 +1,7 @@
+# XT/java — carga klors + strings i18n de xtractor para el instalador java.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/java) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/java/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/java/es)
+unset _lang

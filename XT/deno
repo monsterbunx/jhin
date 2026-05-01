@@ -1,0 +1,7 @@
+# XT/deno — carga klors + strings i18n de xtractor para el instalador deno.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/deno) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/deno/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/deno/es)
+unset _lang

@@ -1,0 +1,7 @@
+# XT/kotlin — carga klors + strings i18n de xtractor para el instalador kotlin.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/kotlin) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/kotlin/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/kotlin/es)
+unset _lang
