@@ -19,7 +19,8 @@ say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 SWIFT_VER="6.1.2"
-SWIFT_DIST="ubuntu2204"
+SWIFT_DIR="ubuntu2204"
+SWIFT_FILE_DIST="ubuntu22.04"
 
 say "$XT_TITLE"
 
@@ -28,10 +29,10 @@ run apt update
 run apt install -y curl ca-certificates binutils gnupg2 libc6-dev libcurl4 libedit2 libgcc-12-dev libpython3-dev libsqlite3-0 libstdc++-12-dev libxml2-dev libz3-dev pkg-config tzdata zlib1g-dev unzip
 
 td=$(mktemp -d)
-URL="https://download.swift.org/swift-${SWIFT_VER}-release/${SWIFT_DIST}/swift-${SWIFT_VER}-RELEASE/swift-${SWIFT_VER}-RELEASE-${SWIFT_DIST}.tar.gz"
+URL="https://download.swift.org/swift-${SWIFT_VER}-release/${SWIFT_DIR}/swift-${SWIFT_VER}-RELEASE/swift-${SWIFT_VER}-RELEASE-${SWIFT_FILE_DIST}.tar.gz"
 
 say "$XT_DOWNLOAD"
-run curl -L -o "$td/swift.tar.gz" "$URL"
+run curl -fL -o "$td/swift.tar.gz" "$URL"
 
 say "$XT_EXTRACT"
 rm -rf /usr/local/swift
