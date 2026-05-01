@@ -36,11 +36,11 @@ Detecta DinD automáticamente: si corre dentro de un contenedor, configura `stor
 ## Arquitectura
 
 ```
-jhin/<tool>          ← lógica de instalación (parsea args, llama a xt-<tool>, usa XT_*)
+jhin/<tool>            ← lógica de instalación (parsea args, llama a XT/<tool>, usa XT_*)
    ↓ source
-jhin/xt-<tool>       ← loader: trae klors + xtractor/<tool>/<lang>
+jhin/XT/<tool>         ← loader: trae klors + xtractor/<tool>/<lang>
    ↓ source
-klors/klors          ← funciones c_red, c_ok, etc.
+klors/klors            ← funciones c_red, c_ok, etc.
 xtractor/<tool>/<lang> ← variables XT_TITLE, XT_DOWNLOAD, etc. (ya coloreadas)
 ```
 
