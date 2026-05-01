@@ -33,6 +33,56 @@ Detecta DinD automáticamente: si corre dentro de un contenedor, configura `stor
 . <(curl -fsSL https://monsterbunx.github.io/jhin/php) es -v
 ```
 
+## Rust
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/rust) es -v
+```
+
+## Ruby
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/ruby) es -v
+```
+
+## Java (OpenJDK)
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/java) es -v
+```
+
+## Kotlin
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/kotlin) es -v
+```
+
+## .NET (dotnet SDK)
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/dotnet) es -v
+```
+
+## Swift
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/swift) es -v
+```
+
+## Elixir
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/elixir) es -v
+```
+
+## Lua
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/lua) es -v
+```
+
+## Deno
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/deno) es -v
+```
+
+## Bun
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/bun) es -v
+```
+
 ## Arquitectura
 
 ```
