@@ -1,0 +1,7 @@
+# xt-nodejs — carga klors + strings i18n de xtractor para el instalador nodejs.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/xt-nodejs) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/nodejs/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/nodejs/es)
+unset _lang
