@@ -1,0 +1,46 @@
+#!/bin/bash
+# jhin/kotlin — instalador Kotlin vía release oficial JetBrains (zip).
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/kotlin) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: kotlin [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/kotlin) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+sayf() { local f="$1"; shift; printf '%b\n' "$(printf "$f" "$@")"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+
+say "$XT_DEPS"
+run apt update
+run apt install -y default-jre unzip curl ca-certificates
+
+say "$XT_FETCH_VERSION"
+KOT_VER=$(curl -sSL https://api.github.com/repos/JetBrains/kotlin/releases/latest | grep -oP '"tag_name":\s*"v\K[^"]+' | head -1)
+sayf "$XT_VERSION" "$KOT_VER"
+
+td=$(mktemp -d)
+sayf "$XT_DOWNLOAD" "$KOT_VER"
+run curl -L -o "$td/kotlin.zip" "https://github.com/JetBrains/kotlin/releases/download/v$KOT_VER/kotlin-compiler-$KOT_VER.zip"
+
+say "$XT_INSTALL"
+rm -rf /usr/local/kotlinc
+run unzip -o "$td/kotlin.zip" -d /usr/local
+rm -rf "$td"
+
+say "$XT_PATH"
+ln -sf /usr/local/kotlinc/bin/kotlinc /usr/local/bin/kotlinc
+ln -sf /usr/local/kotlinc/bin/kotlin /usr/local/bin/kotlin
+
+say "$XT_DONE"
+kotlinc -version 2>&1 | head -1
