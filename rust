@@ -1,0 +1,40 @@
+#!/bin/bash
+# jhin/rust — instalador Rust vía rustup.rs.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/rust) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: rust [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/rust) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+
+say "$XT_DEPS"
+run apt update
+run apt install -y curl ca-certificates build-essential
+
+say "$XT_INSTALL"
+if [ "$VERBOSE" = "1" ]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain stable
+else
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y --default-toolchain stable >/dev/null 2>&1
+fi
+
+say "$XT_PATH"
+. "$HOME/.cargo/env" 2>/dev/null
+export PATH="$HOME/.cargo/bin:$PATH"
+
+say "$XT_DONE"
+rustc --version
+cargo --version
