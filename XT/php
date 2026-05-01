@@ -1,5 +1,5 @@
-# xt-php — carga klors + strings i18n de xtractor para el instalador php.
-# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/xt-php) [lang]
+# XT/php — carga klors + strings i18n de xtractor para el instalador php.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/php) [lang]
 _lang="${1:-es}"
 . <(curl -fsSL https://monsterbunx.github.io/klors/klors)
 . <(curl -fsSL "https://monsterbunx.github.io/xtractor/php/$_lang") 2>/dev/null \
