@@ -3,14 +3,10 @@ services:
     image: debian:12
     container_name: jhin
     hostname: jhin
-    network_mode: "host"
+    privileged: true
     volumes:
       - ./scripts:/scripts
     stdin_open: true
     tty: true
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun
     command: ["/bin/bash", "/scripts/main.sh"]
     restart: unless-stopped
