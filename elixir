@@ -1,0 +1,27 @@
+#!/bin/bash
+# jhin/elixir — instalador Elixir vía apt.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/elixir) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: elixir [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/elixir) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+say "$XT_DEPS"
+run apt update
+run apt install -y elixir
+
+say "$XT_DONE"
+elixir --version
