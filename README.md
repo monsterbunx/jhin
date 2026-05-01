@@ -83,6 +83,84 @@ Detecta DinD automáticamente: si corre dentro de un contenedor, configura `stor
 . <(curl -fsSL https://monsterbunx.github.io/jhin/bun) es -v
 ```
 
+---
+
+## Tooling
+
+### git
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/git) es -v
+```
+
+### vim
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/vim) es -v
+```
+
+### tmux
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/tmux) es -v
+```
+
+### jq
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/jq) es -v
+```
+
+### TypeScript (npm global, post-nodejs)
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/typescript) es -v
+```
+
+### Terraform
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/terraform) es -v
+```
+
+### PostgreSQL (server + client)
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/postgres) es -v
+```
+
+---
+
+## Más lenguajes
+
+### R
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/r) es -v
+```
+
+### Scala (Coursier)
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/scala) es -v
+```
+
+### Haskell (GHCup)
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/haskell) es -v
+```
+
+### Crystal
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/crystal) es -v
+```
+
+### Zig
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/zig) es -v
+```
+
+### Dart
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/dart) es -v
+```
+
+### C/C++ (gcc + g++ + clang + make)
+```bash
+. <(curl -fsSL https://monsterbunx.github.io/jhin/cpp) es -v
+```
+
 ## Arquitectura
 
 ```
