@@ -1,0 +1,7 @@
+# XT/jq — carga klors + strings i18n de xtractor para el instalador jq.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/jq) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/jq/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/jq/es)
+unset _lang

@@ -1,0 +1,7 @@
+# XT/tmux — carga klors + strings i18n de xtractor para el instalador tmux.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/tmux) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/tmux/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/tmux/es)
+unset _lang

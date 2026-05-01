@@ -1,0 +1,7 @@
+# XT/crystal — carga klors + strings i18n de xtractor para el instalador crystal.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/crystal) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/crystal/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/crystal/es)
+unset _lang

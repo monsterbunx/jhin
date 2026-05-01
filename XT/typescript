@@ -1,0 +1,7 @@
+# XT/typescript — carga klors + strings i18n de xtractor para el instalador typescript.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/typescript) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/typescript/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/typescript/es)
+unset _lang

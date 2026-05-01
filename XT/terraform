@@ -1,0 +1,7 @@
+# XT/terraform — carga klors + strings i18n de xtractor para el instalador terraform.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/terraform) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/terraform/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/terraform/es)
+unset _lang

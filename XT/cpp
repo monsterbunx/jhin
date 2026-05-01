@@ -1,0 +1,7 @@
+# XT/cpp — carga klors + strings i18n de xtractor para el instalador cpp.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/cpp) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/cpp/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/cpp/es)
+unset _lang

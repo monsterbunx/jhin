@@ -1,0 +1,7 @@
+# XT/vim — carga klors + strings i18n de xtractor para el instalador vim.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/vim) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/vim/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/vim/es)
+unset _lang

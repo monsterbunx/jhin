@@ -1,0 +1,7 @@
+# XT/postgres — carga klors + strings i18n de xtractor para el instalador postgres.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/postgres) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/postgres/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/postgres/es)
+unset _lang
