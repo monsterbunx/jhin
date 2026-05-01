@@ -1,0 +1,45 @@
+#!/bin/bash
+# jhin/haskell — instalador Haskell vía GHCup.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/haskell) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: haskell [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/haskell) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+
+say "$XT_DEPS"
+run apt update
+run apt install -y build-essential libffi-dev libgmp-dev libncurses-dev zlib1g-dev curl ca-certificates
+
+say "$XT_INSTALL"
+export BOOTSTRAP_HASKELL_NONINTERACTIVE=1
+export BOOTSTRAP_HASKELL_MINIMAL=1
+if [ "$VERBOSE" = "1" ]; then
+  curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | bash
+else
+  curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | bash >/dev/null 2>&1
+fi
+
+say "$XT_PATH"
+export PATH="$HOME/.ghcup/bin:$PATH"
+. "$HOME/.ghcup/env" 2>/dev/null || true
+
+# Asegurar GHC instalado (BOOTSTRAP_MINIMAL no incluye toolchain)
+run "$HOME/.ghcup/bin/ghcup" install ghc --set 2>/dev/null
+run "$HOME/.ghcup/bin/ghcup" install cabal --set 2>/dev/null
+
+say "$XT_DONE"
+"$HOME/.ghcup/bin/ghc" --version 2>&1 | head -1 || ghc --version
