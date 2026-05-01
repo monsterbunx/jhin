@@ -1,5 +1,5 @@
-# xt-docker — carga klors + strings i18n de xtractor para el instalador docker.
-# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/xt-docker) [lang]
+# XT/docker — carga klors + strings i18n de xtractor para el instalador docker.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/docker) [lang]
 _lang="${1:-es}"
 . <(curl -fsSL https://monsterbunx.github.io/klors/klors)
 . <(curl -fsSL "https://monsterbunx.github.io/xtractor/docker/$_lang") 2>/dev/null \

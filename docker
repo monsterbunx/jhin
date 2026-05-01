@@ -16,7 +16,7 @@ done
 LANG_ARG="${LANG_ARG:-es}"
 
 # --- carga klors + strings i18n ---
-. <(curl -fsSL https://monsterbunx.github.io/jhin/xt-docker) "$LANG_ARG"
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/docker) "$LANG_ARG"
 
 # --- helpers ---
 say()  { printf '%b\n' "$1"; }
