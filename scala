@@ -26,11 +26,14 @@ run apt install -y default-jre curl ca-certificates
 
 td=$(mktemp -d)
 say "$XT_DOWNLOAD"
-run curl -fL -o "$td/cs" https://github.com/coursier/coursier/releases/latest/download/cs-x86_64-pc-linux-static
+run curl -fL -o "$td/cs.gz" https://github.com/coursier/coursier/releases/latest/download/cs-x86_64-pc-linux-static.gz
+run gunzip "$td/cs.gz"
 chmod +x "$td/cs"
 
 say "$XT_SETUP"
 run "$td/cs" setup --yes
+# Asegurar que scala esté instalado (cs setup en algunas versiones no lo incluye por defecto)
+run "$td/cs" install scala scalac
 rm -rf "$td"
 
 say "$XT_PATH"
