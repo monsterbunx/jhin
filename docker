@@ -51,5 +51,18 @@ Dwnld $dmp
 cd ..
 rm -rf nyadocker/
 
-apt --fix-broken install
+apt --fix-broken install -y
+
+# DinD support: si corremos dentro de un contenedor, no hay systemd que arranque
+# dockerd tras el dpkg. Lo lanzamos en background y esperamos al socket.
+if [ -f /.dockerenv ] || grep -qE 'docker|containerd' /proc/1/cgroup 2>/dev/null; then
+  if ! pgrep -x dockerd >/dev/null; then
+    nohup dockerd >/var/log/dockerd.log 2>&1 &
+    for _ in $(seq 1 30); do
+      [ -S /var/run/docker.sock ] && break
+      sleep 1
+    done
+  fi
+fi
+
 docker version
