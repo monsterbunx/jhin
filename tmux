@@ -1,0 +1,27 @@
+#!/bin/bash
+# jhin/tmux — instalador tmux vía apt.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/tmux) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: tmux [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/tmux) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+say "$XT_DEPS"
+run apt update
+run apt install -y tmux
+
+say "$XT_DONE"
+tmux -V
