@@ -1,0 +1,7 @@
+# xt-python — carga klors + strings i18n de xtractor para el instalador python.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/xt-python) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/python/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/python/es)
+unset _lang
