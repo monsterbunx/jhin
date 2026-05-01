@@ -1,19 +1,58 @@
 #!/bin/bash
-apt update 
-apt upgrade -y
-apt install build-essential wget libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev libgdbm-dev libdb-dev curl -y
+# jhin/python — compilación de Python desde fuente python.org.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/python) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: python [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/xt-python) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+sayf() { local f="$1"; shift; printf '%b\n' "$(printf "$f" "$@")"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+
+say "$XT_DEPS"
+run apt update
+run apt upgrade -y
+run apt install -y build-essential wget libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev libgdbm-dev libdb-dev curl
+
 base="https://www.python.org/ftp/python"
-version=$(curl -s $base/ | grep -oP '\d\.\d+\.\d+(?=/)' | sort -u -Vr | sed -n '2p')
+say "$XT_FETCH_VERSION"
+version=$(curl -s "$base/" | grep -oP '\d\.\d+\.\d+(?=/)' | sort -u -Vr | sed -n '2p')
+sayf "$XT_VERSION" "$version"
 
-echo $version
-curl -OJL $base/$version/Python-$version.tar.xz
+td=$(mktemp -d)
+sayf "$XT_DOWNLOAD" "$version"
+run curl -L -o "$td/Python-$version.tar.xz" "$base/$version/Python-$version.tar.xz"
 
-tar -xvf Python*.tar.xz
-cd Python*/
-./configure --enable-optimizations
-make -j$(nproc)
-make install
-echo "alias python='/usr/local/bin/python3.14'" >> ~/.bashrc
-source ~/.bashrc
-/usr/local/bin/python3.14 -m pip --version
-python3 --version
+run tar -xJf "$td/Python-$version.tar.xz" -C "$td"
+cd "$td/Python-$version" || return 1
+
+say "$XT_CONFIGURE"
+run ./configure --enable-optimizations
+
+say "$XT_BUILD"
+run make -j"$(nproc)"
+
+say "$XT_INSTALL"
+run make install
+
+cd ~ || return 1
+rm -rf "$td"
+
+echo "alias python='/usr/local/bin/python3.${version%.*}'" 2>/dev/null
+echo 'export PATH=/usr/local/bin:$PATH' >> ~/.bashrc
+export PATH=/usr/local/bin:$PATH
+
+say "$XT_DONE"
+python3 --version 2>/dev/null || /usr/local/bin/python3.* --version 2>/dev/null | head -1
