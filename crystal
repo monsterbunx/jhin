@@ -1,0 +1,35 @@
+#!/bin/bash
+# jhin/crystal — instalador Crystal vía script oficial crystal-lang.org/install.sh.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/crystal) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: crystal [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/crystal) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+
+say "$XT_DEPS"
+run apt update
+run apt install -y curl gnupg ca-certificates
+
+say "$XT_INSTALL"
+if [ "$VERBOSE" = "1" ]; then
+  curl -fsSL https://crystal-lang.org/install.sh | bash
+else
+  curl -fsSL https://crystal-lang.org/install.sh | bash >/dev/null 2>&1
+fi
+
+say "$XT_DONE"
+crystal --version 2>&1 | head -1
