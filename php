@@ -1,5 +1,5 @@
 #!/bin/bash
-# jhin/php — compilación de PHP desde fuente (php-src GitHub release).
+# jhin/php — instalador PHP 8.5 vía packages.sury.org (.deb precompilados).
 # Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/php) [lang] [-v]
 
 LANG_ARG=""
@@ -22,30 +22,29 @@ say "$XT_TITLE"
 
 say "$XT_DEPS"
 run apt update
-run apt upgrade -y
-run apt install -y libxml2-dev libsqlite3-dev build-essential curl autoconf bison re2c pkg-config
+run apt install -y lsb-release ca-certificates curl
 
-td=$(mktemp -d)
-say "$XT_DOWNLOAD"
-run curl -L -o "$td/php-src.tar.gz" https://github.com/php/php-src/archive/refs/tags/php-8.5.0.tar.gz
+say "$XT_KEYRING_DOWNLOAD"
+run curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
 
-run tar -xzf "$td/php-src.tar.gz" -C "$td"
-cd "$td"/php-src-* || return 1
+say "$XT_KEYRING_INSTALL"
+run dpkg -i /tmp/debsuryorg-archive-keyring.deb
+rm -f /tmp/debsuryorg-archive-keyring.deb
 
-say "$XT_BUILDCONF"
-run ./buildconf --force
+say "$XT_REPO_ADD"
+tee /etc/apt/sources.list.d/php.sources >/dev/null <<EOF
+Types: deb
+URIs: https://packages.sury.org/php/
+Suites: $(lsb_release -sc)
+Components: main
+Signed-By: /usr/share/keyrings/debsuryorg-archive-keyring.gpg
+EOF
 
-say "$XT_CONFIGURE"
-run ./configure
+say "$XT_REPO_UPDATE"
+run apt update
 
-say "$XT_BUILD"
-run make -j"$(nproc)"
-
-say "$XT_INSTALL"
-run make install
-
-cd ~ || return 1
-rm -rf "$td"
+say "$XT_PHP_INSTALL"
+run apt install -y php8.5
 
 say "$XT_DONE"
 php -v
