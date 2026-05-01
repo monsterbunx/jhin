@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/xt-go) "$LANG_ARG"
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/go) "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 sayf() { local f="$1"; shift; printf '%b\n' "$(printf "$f" "$@")"; }
