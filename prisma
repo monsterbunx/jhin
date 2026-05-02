@@ -1,0 +1,38 @@
+#!/bin/bash
+# jhin/prisma — Prisma CLI vía npm (instala nodejs+npm si falta).
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/prisma) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: prisma [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/prisma) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+
+say "$XT_DEPS"
+if ! command -v npm >/dev/null 2>&1 && [ ! -x /usr/local/node/bin/npm ]; then
+  run apt update
+  run apt install -y nodejs npm
+fi
+
+if [ -x /usr/local/node/bin/npm ]; then
+  export PATH="/usr/local/node/bin:$PATH"
+fi
+
+say "$XT_INSTALL"
+run npm install -g prisma
+
+say "$XT_NOTE"
+say "$XT_DONE"
+prisma --version 2>/dev/null | head -5 || npx prisma --version 2>/dev/null | head -5

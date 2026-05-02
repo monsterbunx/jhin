@@ -1,0 +1,7 @@
+# XT/mongodb — carga klors + strings i18n de xtractor para el instalador mongodb.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/mongodb) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/mongodb/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/mongodb/es)
+unset _lang
