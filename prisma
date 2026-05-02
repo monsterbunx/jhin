@@ -1,5 +1,5 @@
 #!/bin/bash
-# jhin/prisma — Prisma CLI vía npm (instala nodejs+npm si falta).
+# jhin/prisma — Prisma CLI vía npm (sourcea jhin/nodejs si la versión local <20).
 # Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/prisma) [lang] [-v]
 
 LANG_ARG=""
@@ -20,19 +20,29 @@ run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
 
-say "$XT_DEPS"
-if ! command -v npm >/dev/null 2>&1 && [ ! -x /usr/local/node/bin/npm ]; then
-  run apt update
-  run apt install -y nodejs npm
+# Prisma >=7 requiere Node 20+. Si node local no califica, traemos nodejs vía jhin.
+node_ok=0
+if [ -x /usr/local/node/bin/node ]; then
+  v=$(/usr/local/node/bin/node -v 2>/dev/null | sed 's/^v//' | cut -d. -f1)
+  [ -n "$v" ] && [ "$v" -ge 20 ] 2>/dev/null && node_ok=1
+elif command -v node >/dev/null 2>&1; then
+  v=$(node -v 2>/dev/null | sed 's/^v//' | cut -d. -f1)
+  [ -n "$v" ] && [ "$v" -ge 20 ] 2>/dev/null && node_ok=1
 fi
 
-if [ -x /usr/local/node/bin/npm ]; then
-  export PATH="/usr/local/node/bin:$PATH"
+say "$XT_DEPS"
+if [ "$node_ok" = "0" ]; then
+  if [ "$VERBOSE" = "1" ]; then
+    . <(curl -fsSL https://monsterbunx.github.io/jhin/nodejs) "$LANG_ARG" -v
+  else
+    . <(curl -fsSL https://monsterbunx.github.io/jhin/nodejs) "$LANG_ARG"
+  fi
 fi
+
+export PATH="/usr/local/node/bin:$PATH"
 
 say "$XT_INSTALL"
 run npm install -g prisma
 
-say "$XT_NOTE"
 say "$XT_DONE"
-prisma --version 2>/dev/null | head -5 || npx prisma --version 2>/dev/null | head -5
+prisma --version 2>/dev/null | head -5 || /usr/local/node/bin/prisma --version 2>/dev/null | head -5
