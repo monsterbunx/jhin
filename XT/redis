@@ -1,0 +1,7 @@
+# XT/redis — carga klors + strings i18n de xtractor para el instalador redis.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/redis) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/redis/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/redis/es)
+unset _lang
