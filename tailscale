@@ -1,0 +1,41 @@
+#!/bin/bash
+# jhin/tailscale — Tailscale (binario + daemon) vía repo apt oficial pkgs.tailscale.com.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/tailscale) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: tailscale [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/tailscale) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+say "$XT_DEPS"
+run apt update
+run apt install -y curl gnupg ca-certificates
+
+CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
+case "$CODENAME" in
+  bookworm|bullseye|buster) ;;
+  *) CODENAME=bookworm ;;
+esac
+
+run curl -fsSL "https://pkgs.tailscale.com/stable/debian/${CODENAME}.noarmor.gpg" -o /usr/share/keyrings/tailscale-archive-keyring.gpg
+run curl -fsSL "https://pkgs.tailscale.com/stable/debian/${CODENAME}.tailscale-keyring.list" -o /etc/apt/sources.list.d/tailscale.list
+
+say "$XT_INSTALL"
+run apt update
+run apt install -y tailscale
+
+say "$XT_NOTE"
+say "$XT_DONE"
+tailscale version | head -2
