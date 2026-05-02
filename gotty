@@ -1,0 +1,46 @@
+#!/bin/bash
+# jhin/gotty — gotty (CLI → web terminal) vía binario oficial sorenisanerd/gotty.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/gotty) [lang] [-v]
+
+LANG_ARG=""
+VERBOSE=0
+for arg in "$@"; do
+  case "$arg" in
+    -v|--verbose) VERBOSE=1 ;;
+    -h|--help) echo "uso: gotty [lang] [-v]"; return 0 2>/dev/null || exit 0 ;;
+    *) [ -z "$LANG_ARG" ] && LANG_ARG="$arg" ;;
+  esac
+done
+LANG_ARG="${LANG_ARG:-es}"
+
+. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/gotty) "$LANG_ARG"
+
+say()  { printf '%b\n' "$1"; }
+run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
+
+say "$XT_TITLE"
+say "$XT_DEPS"
+run apt update
+run apt install -y curl ca-certificates tar
+
+GOTTY_VER="v1.5.0"
+ARCH="$(uname -m)"
+case "$ARCH" in
+  x86_64)  GOTTY_ARCH="amd64" ;;
+  aarch64|arm64) GOTTY_ARCH="arm64" ;;
+  *) GOTTY_ARCH="amd64" ;;
+esac
+
+td=$(mktemp -d)
+say "$XT_DOWNLOAD"
+URL="https://github.com/sorenisanerd/gotty/releases/download/${GOTTY_VER}/gotty_${GOTTY_VER}_linux_${GOTTY_ARCH}.tar.gz"
+run curl -fL -o "$td/gotty.tar.gz" "$URL"
+run tar -xzf "$td/gotty.tar.gz" -C "$td"
+
+say "$XT_INSTALL"
+mv "$td/gotty" /usr/local/bin/gotty
+chmod +x /usr/local/bin/gotty
+rm -rf "$td"
+
+say "$XT_DONE"
+gotty --version

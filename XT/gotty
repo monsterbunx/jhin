@@ -1,0 +1,7 @@
+# XT/gotty — carga klors + strings i18n de xtractor para el instalador gotty.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/gotty) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/gotty/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/gotty/es)
+unset _lang
