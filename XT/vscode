@@ -1,0 +1,7 @@
+# XT/vscode — carga klors + strings i18n de xtractor para el instalador vscode.
+# Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/XT/vscode) [lang]
+_lang="${1:-es}"
+. <(curl -fsSL https://monsterbunx.github.io/klors/klors)
+. <(curl -fsSL "https://monsterbunx.github.io/xtractor/vscode/$_lang") 2>/dev/null \
+  || . <(curl -fsSL https://monsterbunx.github.io/xtractor/vscode/es)
+unset _lang
