@@ -13,23 +13,37 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/nodejs) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/nodejs") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# Node publica como linux-x64 / linux-arm64.
+case "$JHIN_ARCH" in
+  amd64) NODE_ARCH="x64" ;;
+  arm64) NODE_ARCH="arm64" ;;
+  *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
+esac
+
+# xz-utils en Debian; xz en el resto.
+case "$JHIN_PM" in
+  apt) XZ_PKG="xz-utils" ;;
+  *)   XZ_PKG="xz" ;;
+esac
+
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt upgrade -y
-run apt install curl xz-utils -y
+run pm_update
+run pm_install curl ca-certificates "$XZ_PKG"
 
 rm -rf /usr/local/node
 
 td=$(mktemp -d)
 say "$XT_DOWNLOAD"
-run curl -L -o "$td/node.tar.xz" https://nodejs.org/dist/v22.15.1/node-v22.15.1-linux-x64.tar.xz
+run curl -L -o "$td/node.tar.xz" "https://nodejs.org/dist/v22.15.1/node-v22.15.1-linux-${NODE_ARCH}.tar.xz"
 
 say "$XT_EXTRACT"
 run tar -xJf "$td/node.tar.xz" -C "$td"
