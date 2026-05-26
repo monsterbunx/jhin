@@ -20,18 +20,28 @@ ARCHES="${ARCHES:-amd64 arm64}"
 # Cómo invocar docker. En apocalipsis: `sg docker -c`. Override con DOCKER_RUN="docker".
 DOCKER_RUN="${DOCKER_RUN:-}"
 
-# Runner que corre DENTRO del contenedor: bootstrap (curl/bash) + sourcea el instalador.
+# Runner que corre DENTRO del contenedor. Arranca con /bin/sh (presente en toda
+# distro, incl. Alpine que no trae bash), bootstrapea curl+bash, y recién ahí
+# sourcea el instalador bajo bash.
 RUNNER="$(mktemp)"
 cat > "$RUNNER" <<'EOF'
-#!/usr/bin/env bash
+#!/bin/sh
 tool="$1"
-if   command -v apt-get >/dev/null 2>&1; then export DEBIAN_FRONTEND=noninteractive; apt-get update -qq >/dev/null && apt-get install -y -qq curl ca-certificates bash >/dev/null
-elif command -v dnf     >/dev/null 2>&1; then dnf install -y -q curl ca-certificates bash >/dev/null
-elif command -v apk     >/dev/null 2>&1; then apk add --no-cache -q curl ca-certificates bash >/dev/null
+if command -v apt-get >/dev/null 2>&1; then
+  # deb10 (buster) es EOL → repos en archive.debian.org, sin Valid-Until.
+  if grep -qs buster /etc/os-release 2>/dev/null; then
+    sed -i 's|deb.debian.org/debian|archive.debian.org/debian|g; s|security.debian.org/debian-security|archive.debian.org/debian-security|g; s|deb.debian.org/debian-security|archive.debian.org/debian-security|g; /buster-updates/d' /etc/apt/sources.list 2>/dev/null
+    APT_OPTS="-o Acquire::Check-Valid-Until=false"
+  fi
+  export DEBIAN_FRONTEND=noninteractive
+  # shellcheck disable=SC2086
+  apt-get $APT_OPTS update -qq >/dev/null && apt-get install -y -qq curl ca-certificates bash >/dev/null
+elif command -v dnf >/dev/null 2>&1; then dnf install -y -q curl ca-certificates bash >/dev/null
+elif command -v apk >/dev/null 2>&1; then apk add --no-cache -q curl ca-certificates bash >/dev/null
 fi
-export JHIN_BASE=file:///jhin
-# El instalador se autoverifica al final (node -v, zig version, scala/swift --version).
-. "/jhin/$tool" es -v
+export JHIN_BASE=file:///jhin JHIN_TOOL="$tool"
+# El instalador se autoverifica al final (node -v, zig version, etc.).
+bash -c '. "/jhin/$JHIN_TOOL" es -v'
 EOF
 chmod +x "$RUNNER"
 trap 'rm -f "$RUNNER"' EXIT
@@ -48,7 +58,7 @@ for distro in $DISTROS; do
       printf '▶ %-30s ... ' "$label"
       if run_docker run --rm "--platform=linux/$arch" \
            -v "$REPO:/jhin:ro" -v "$RUNNER:/run.sh:ro" \
-           "$distro" bash /run.sh "$tool" >/tmp/jhin-test.log 2>&1; then
+           "$distro" sh /run.sh "$tool" >/tmp/jhin-test.log 2>&1; then
         echo "OK"; pass=$((pass+1))
       else
         echo "FAIL (ver /tmp/jhin-test.log)"; fail=$((fail+1)); FAILED="$FAILED\n  - $label"

@@ -20,6 +20,18 @@ JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# Alpine usa musl: los tarballs glibc de nodejs.org no ejecutan. Usar el paquete
+# de la distro (compilado contra musl). Cede control de versión a Alpine.
+if [ "$JHIN_OS" = "alpine" ]; then
+  say "$XT_TITLE"
+  say "$XT_DEPS"
+  run pm_update
+  run pm_install nodejs npm
+  say "$XT_DONE"
+  node -v; npm -v
+  return 0 2>/dev/null || exit 0
+fi
+
 # Node publica como linux-x64 / linux-arm64.
 case "$JHIN_ARCH" in
   amd64) NODE_ARCH="x64" ;;

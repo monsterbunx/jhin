@@ -58,9 +58,22 @@ JHIN_PM="$(jhin_detect_pm)"
 export JHIN_OS JHIN_ARCH JHIN_PM
 
 # --- Operaciones del PM (idempotentes, no interactivas) ---
+# Debian 10 (buster) es EOL: sus repos viven en archive.debian.org y las
+# Release files están expiradas (hay que desactivar Valid-Until).
+_pm_fix_buster() {
+  [ "$JHIN_PM" = "apt" ] || return 0
+  grep -qs buster /etc/os-release 2>/dev/null || return 0
+  sed -i \
+    -e 's|deb.debian.org/debian|archive.debian.org/debian|g' \
+    -e 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' \
+    -e 's|deb.debian.org/debian-security|archive.debian.org/debian-security|g' \
+    -e '/buster-updates/d' /etc/apt/sources.list 2>/dev/null
+  JHIN_APT_OPTS="-o Acquire::Check-Valid-Until=false"
+}
+
 pm_update() {
   case "$JHIN_PM" in
-    apt)    DEBIAN_FRONTEND=noninteractive apt-get update ;;
+    apt)    _pm_fix_buster; DEBIAN_FRONTEND=noninteractive apt-get ${JHIN_APT_OPTS:-} update ;;
     dnf)    dnf -y makecache ;;
     apk)    apk update ;;
     pacman) pacman -Sy --noconfirm ;;
@@ -71,7 +84,7 @@ pm_update() {
 pm_install() {
   [ "$#" -eq 0 ] && return 0
   case "$JHIN_PM" in
-    apt)    DEBIAN_FRONTEND=noninteractive apt-get install -y "$@" ;;
+    apt)    DEBIAN_FRONTEND=noninteractive apt-get ${JHIN_APT_OPTS:-} install -y "$@" ;;
     dnf)    dnf install -y "$@" ;;
     apk)    apk add --no-cache "$@" ;;
     pacman) pacman -S --noconfirm --needed "$@" ;;
