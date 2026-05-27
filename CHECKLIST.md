@@ -39,15 +39,15 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **jq** | paquete distro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **tmux** | paquete distro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **vim** | paquete distro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
-| **java** | paquete distro (default-jdk/openjdk) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
+| **java** | paquete distro (default-jdk/openjdk) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **lua** | paquete distro (lua5.4) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **ruby** | paquete distro (ruby-full) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
-| **r** | paquete distro (r-base) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
+| **r** | paquete distro (r-base) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **elixir** | paquete distro (elixir) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **sql** | paquete distro (sqlite3) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **redis** | paquete distro (redis) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
-| **mysql** | cliente distro (mariadb-client) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
-| **postgres** | paquete distro (postgresql) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
+| **mysql** | cliente distro (mariadb-client) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
+| **postgres** | paquete distro (postgresql) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **python** | compila CPython desde fuente | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | 🟡 | 🟡 |
 | **typescript** | npm -g (requiere nodejs) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
 | **prisma** | npm -g (requiere nodejs) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
@@ -76,7 +76,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 ### Lote 1 — paquete distro puro (fácil: solo pm_install + nombre por distro)
 - [x] git, jq, tmux, vim (mismo nombre) — 30/30 en apt/dnf/apk
 - [x] cpp, lua, ruby, elixir, sql, redis (nombre por distro) — 30/30 en apt/dnf/apk
-- [ ] java, r, mysql, postgres (verify en stderr / setup de servidor — más cuidado)
+- [x] java, r, mysql, postgres (JDK/R/cliente-mariadb/postgresql por PM) — 12/12 apt/dnf/apk
 
 ### Lote 2 — script oficial auto-arch (curl|bash, multi-distro casi gratis)
 - [x] rust, bun, deno, haskell — deb12/fedora OK. Alpine: rust ✅ (build-base),
@@ -85,7 +85,6 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 ### Lote 3 — binario/tarball con arch en URL
 - [x] go — `dpkg`→`$JHIN_ARCH` + `grep -oP`→`-oE` (busybox) — deb12/fedora/alpine + arm64 OK
 - [ ] gotty, kotlin (deps por distro; kotlin tiene `grep -oP \K` → portar a -oE)
-- [ ] python (compila; deps build por distro), typescript, prisma (post-nodejs)
 - [ ] python (compila; deps build por distro), typescript, prisma (post-nodejs)
 
 ### Lote 4 — repos de terceros (lo más duro; rama por PM)
