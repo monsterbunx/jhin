@@ -17,7 +17,10 @@ REPO="$(cd "$(dirname "$0")/.." && pwd)"
 TOOLS="${TOOLS:-nodejs zig scala swift}"
 DISTROS="${DISTROS:-debian:13}"
 ARCHES="${ARCHES:-amd64 arm64}"
-# Cómo invocar docker. En apocalipsis: `sg docker -c`. Override con DOCKER_RUN="docker".
+# Ejecutable docker a usar. Por defecto (vacío) usa el wrapper `sg docker -c`
+# de apocalipsis. DOCKER_RUN debe ser un EJECUTABLE plano (ej. "docker",
+# "podman"), NO "sg docker -c" (ese necesita el comando como un solo string y
+# rompe la invocación con args sueltos).
 DOCKER_RUN="${DOCKER_RUN:-}"
 
 # Runner que corre DENTRO del contenedor. Arranca con /bin/sh (presente en toda

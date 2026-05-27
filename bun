@@ -13,7 +13,9 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/bun) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/bun") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
@@ -21,8 +23,14 @@ run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt install -y curl unzip ca-certificates
+run pm_update
+# Alpine: el binario musl de bun necesita libstdc++ y libgcc (símbolos
+# _Unwind_* y __cxxabiv* en runtime).
+case "$JHIN_PM" in
+  apk) DEPS="curl unzip ca-certificates libstdc++ libgcc" ;;
+  *)   DEPS="curl unzip ca-certificates" ;;
+esac
+run pm_install $DEPS
 
 say "$XT_INSTALL"
 if [ "$VERBOSE" = "1" ]; then

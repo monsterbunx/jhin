@@ -28,24 +28,24 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **swift** | tarball swift.org (glibc, Ubuntu build) | ⬜ | ⬜ | ✅ | ⚠️ | ⬜ | ⬜ | ❌ musl | ⚠️ | ✅ |
 | **go** | tarball go.dev (arch en URL) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ⚠️ usa dpkg |
 | **gotty** | binario github (arch en URL) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | 🟡 |
-| **rust** | rustup.rs (script, auto-arch) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ musl | 🟡 | 🟡 |
-| **bun** | bun.sh/install (script, auto-arch) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ musl | 🟡 | 🟡 |
-| **deno** | deno.land/install (script, auto-arch) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ musl | 🟡 | 🟡 |
-| **haskell** | ghcup (script, auto-arch) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | 🟡 | 🟡 |
+| **rust** | rustup.rs (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
+| **bun** | bun.sh/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
+| **deno** | deno.land/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
+| **haskell** | ghcup (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **kotlin** | zip github (JVM, arch-indep) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | 🟡 |
 | **crystal** | install.sh (apt/yum interno) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | 🟡 | ⚠️ |
-| **cpp** | paquete distro (build-essential/clang) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **git** | paquete distro | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **jq** | paquete distro | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **tmux** | paquete distro | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **vim** | paquete distro | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
+| **cpp** | paquete distro (build-essential/clang) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
+| **git** | paquete distro | ✅ | ✅ | ✅ | ✅ | ⚠️ | ✅ | ✅ | ✅ | ➖ |
+| **jq** | paquete distro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
+| **tmux** | paquete distro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
+| **vim** | paquete distro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **java** | paquete distro (default-jdk/openjdk) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
-| **lua** | paquete distro (lua5.4) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **ruby** | paquete distro (ruby-full) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
+| **lua** | paquete distro (lua5.4) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
+| **ruby** | paquete distro (ruby-full) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **r** | paquete distro (r-base) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
-| **elixir** | paquete distro (elixir) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **sql** | paquete distro (sqlite3) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **redis** | paquete distro (redis) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
+| **elixir** | paquete distro (elixir) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
+| **sql** | paquete distro (sqlite3) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
+| **redis** | paquete distro (redis) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **mysql** | cliente distro (mariadb-client) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
 | **postgres** | paquete distro (postgresql) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
 | **python** | compila CPython desde fuente | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | 🟡 | 🟡 |
@@ -79,7 +79,8 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 - [ ] java, r, mysql, postgres (verify en stderr / setup de servidor — más cuidado)
 
 ### Lote 2 — script oficial auto-arch (curl|bash, multi-distro casi gratis)
-- [ ] rust, bun, deno, haskell (deps por distro; alpine = musl, validar)
+- [x] rust, bun, deno, haskell — deb12/fedora OK. Alpine: rust ✅ (build-base),
+      bun ✅ (+libstdc++ libgcc), haskell ✅ (+gcompat), deno ❌ (solo binario glibc).
 
 ### Lote 3 — binario/tarball con arch en URL
 - [ ] go (cambiar `dpkg --print-architecture` → `$JHIN_ARCH`)
@@ -102,3 +103,21 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 - **arm64**: tools que son solo "paquete distro" (➖) heredan el soporte arm64
   del repo de la distro — funcionan sin cambios. Los de binario/tarball
   necesitan detección de arch explícita (`$JHIN_ARCH`).
+
+## Metodología de validación
+
+- **Directo**: deb12 (apt), fedora:40 (dnf), alpine:3.20 (apk) — los 3 package
+  managers. amd64.
+- **Familia Debian** (deb10/deb11/deb13/kali/ubuntu): los ✅ de tools
+  "paquete distro" se validaron **representativamente** con `git` (same-name) +
+  `cpp` (deps por distro), que ejercitan el mismo path `pm_update`+`pm_install`.
+  No se re-corrió cada tool en cada variante Debian.
+- **deb10/buster**: `git` y `cpp` OK vía `archive.debian.org` (fixup en `pm.sh`).
+- **kali-rolling**: `git` dio 404 transitorio (índice con `.deb` ya rotado);
+  `cpp` OK. Mitigado con `Acquire::Retries=3` en `pm.sh`. Marcado ⚠️.
+- **arm64**: validado nativo-vía-qemu solo para Lote 0 (nodejs/zig/scala/swift).
+  Lote 2 (scripts auto-arch) marcado 🟡: el script baja el binario arm64 correcto
+  pero falta correrlo. Validación nativa pendiente en oracle.
+- **Hallazgos musl (Alpine)**: zig (estático) y rust/haskell/bun corren con las
+  libs runtime correctas; nodejs y deno NO (solo binario glibc) → fallback apk
+  (nodejs) o ❌ (deno).

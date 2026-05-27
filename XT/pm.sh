@@ -57,6 +57,10 @@ JHIN_ARCH="$(jhin_detect_arch)"
 JHIN_PM="$(jhin_detect_pm)"
 export JHIN_OS JHIN_ARCH JHIN_PM
 
+# Reintentos de red por defecto en apt: los mirrors rolling (kali, debian
+# testing) pueden servir un índice con .deb ya rotados → 404 transitorios.
+[ "$JHIN_PM" = "apt" ] && JHIN_APT_OPTS="-o Acquire::Retries=3"
+
 # --- Operaciones del PM (idempotentes, no interactivas) ---
 # Debian 10 (buster) es EOL: sus repos viven en archive.debian.org y las
 # Release files están expiradas (hay que desactivar Valid-Until).
@@ -68,7 +72,7 @@ _pm_fix_buster() {
     -e 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' \
     -e 's|deb.debian.org/debian-security|archive.debian.org/debian-security|g' \
     -e '/buster-updates/d' /etc/apt/sources.list 2>/dev/null
-  JHIN_APT_OPTS="-o Acquire::Check-Valid-Until=false"
+  JHIN_APT_OPTS="${JHIN_APT_OPTS:-} -o Acquire::Check-Valid-Until=false"
 }
 
 pm_update() {
