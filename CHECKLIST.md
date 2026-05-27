@@ -48,7 +48,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **redis** | paquete distro (redis) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **mysql** | cliente distro (mariadb-client) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **postgres** | paquete distro (postgresql) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
-| **python** | compila CPython desde fuente | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | 🟡 | 🟡 |
+| **python** | compila CPython desde fuente | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **typescript** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **prisma** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **docker** | .deb + binarios estáticos | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
