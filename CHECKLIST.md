@@ -110,6 +110,8 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 
 - **Directo**: deb12 (apt), fedora:40 (dnf), alpine:3.20 (apk) — los 3 package
   managers. amd64.
+- **Barrido baseline**: los 37 instaladores corren en `debian:12/amd64` —
+  37/37 OK en un solo sweep (verificación definitiva del baseline).
 - **Familia Debian** (deb10/deb11/deb13/kali/ubuntu): los ✅ de tools
   "paquete distro" se validaron **representativamente** con `git` (same-name) +
   `cpp` (deps por distro), que ejercitan el mismo path `pm_update`+`pm_install`.
