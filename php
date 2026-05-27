@@ -13,38 +13,28 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/php) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/php") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# PHP del repo de cada distro (robusto cross-distro). Alpine usa binario
+# versionado (php83) sin symlink `php` → verify portable más abajo.
+case "$JHIN_PM" in
+  apt)    DEPS="php-cli" ;;
+  dnf)    DEPS="php-cli" ;;
+  apk)    DEPS="php83 php83-cli" ;;
+  pacman) DEPS="php" ;;
+esac
+
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt install -y lsb-release ca-certificates curl
-
-say "$XT_KEYRING_DOWNLOAD"
-run curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-
-say "$XT_KEYRING_INSTALL"
-run dpkg -i /tmp/debsuryorg-archive-keyring.deb
-rm -f /tmp/debsuryorg-archive-keyring.deb
-
-say "$XT_REPO_ADD"
-tee /etc/apt/sources.list.d/php.sources >/dev/null <<EOF
-Types: deb
-URIs: https://packages.sury.org/php/
-Suites: $(lsb_release -sc)
-Components: main
-Signed-By: /usr/share/keyrings/debsuryorg-archive-keyring.gpg
-EOF
-
-say "$XT_REPO_UPDATE"
-run apt update
-
-say "$XT_PHP_INSTALL"
-run apt install -y php8.5
+run pm_update
+run pm_install $DEPS
 
 say "$XT_DONE"
-php -v
+PHP_BIN="$(command -v php || command -v php83 || command -v php84 || echo php)"
+"$PHP_BIN" -v

@@ -33,7 +33,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **deno** | deno.land/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
 | **haskell** | ghcup (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **kotlin** | zip github (JVM, arch-indep) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **crystal** | install.sh (apt/yum interno) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | 🟡 | ⚠️ |
+| **crystal** | install.sh (apt/yum interno) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **cpp** | paquete distro (build-essential/clang) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **git** | paquete distro | ✅ | ✅ | ✅ | ✅ | ⚠️ | ✅ | ✅ | ✅ | ➖ |
 | **jq** | paquete distro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
@@ -51,13 +51,13 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **python** | compila CPython desde fuente | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | 🟡 | 🟡 |
 | **typescript** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **prisma** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **docker** | .deb + binarios estáticos | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
+| **docker** | .deb + binarios estáticos | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **tailscale** | repo apt/dnf/apk + binario estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **terraform** | repo hashicorp + zip estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **dotnet** | repo MS deb/dnf + dotnet-install.sh | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **vscode** | repo MS deb/dnf (Electron glibc) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ musl | ⚠️ | ⚠️ |
 | **dart** | repo apt Google (no fedora/alpine) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | ⚠️ | ⚠️ |
-| **php** | repo sury (Debian) / remi (Fedora) | ❌ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
+| **php** | repo sury (Debian) / remi (Fedora) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **mongodb** | repo apt/dnf mongodb (no alpine) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | ⚠️ | ⚠️ |
 
 ---
@@ -91,7 +91,8 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 ### Lote 4 — repos de terceros (lo más duro; rama por PM)
 - [ ] docker, tailscale, terraform (tienen binario estático → preferirlo cross-distro)
 - [ ] dotnet (dotnet-install.sh script), vscode (deb/dnf, no alpine)
-- [ ] dart, php, mongodb, crystal (apt-only o per-distro complejo)
+- [x] crystal (install.sh deb/fedora + apk alpine), php (php-cli por distro) — deb12/fedora/alpine OK
+- [~] dart, vscode, mongodb (apt/dnf + alpine ❌) — probando deb12/fedora
 
 ---
 

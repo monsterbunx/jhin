@@ -13,7 +13,9 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/crystal) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/crystal") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
@@ -21,14 +23,20 @@ run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt install -y curl gnupg ca-certificates
+run pm_update
 
-say "$XT_INSTALL"
-if [ "$VERBOSE" = "1" ]; then
-  curl -fsSL https://crystal-lang.org/install.sh | bash
+# Alpine: Crystal está en el repo community (build musl nativo). El install.sh
+# oficial sólo soporta apt/yum (Debian/Ubuntu/Fedora).
+if [ "$JHIN_OS" = "alpine" ]; then
+  run pm_install crystal
 else
-  curl -fsSL https://crystal-lang.org/install.sh | bash >/dev/null 2>&1
+  run pm_install curl gnupg ca-certificates
+  say "$XT_INSTALL"
+  if [ "$VERBOSE" = "1" ]; then
+    curl -fsSL https://crystal-lang.org/install.sh | bash
+  else
+    curl -fsSL https://crystal-lang.org/install.sh | bash >/dev/null 2>&1
+  fi
 fi
 
 say "$XT_DONE"
