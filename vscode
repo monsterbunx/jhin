@@ -13,27 +13,49 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/vscode) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/vscode") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
 
-say "$XT_DEPS"
-run apt update
-run apt install -y --no-install-recommends \
-    curl gnupg apt-transport-https ca-certificates
-
-say "$XT_REPO"
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
-  | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg 2>/dev/null
-echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
-  > /etc/apt/sources.list.d/vscode.list
-
-say "$XT_INSTALL"
-run apt update
-run apt install -y --no-install-recommends code
+# VS Code (Electron) es glibc → no corre en Alpine (musl).
+case "$JHIN_PM" in
+  apt)
+    say "$XT_DEPS"
+    run pm_update
+    run pm_install curl gnupg ca-certificates
+    say "$XT_REPO"
+    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
+      | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg 2>/dev/null
+    echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
+      > /etc/apt/sources.list.d/vscode.list
+    say "$XT_INSTALL"
+    run apt-get ${JHIN_APT_OPTS:-} update
+    run pm_install code
+    ;;
+  dnf)
+    say "$XT_REPO"
+    run rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    cat > /etc/yum.repos.d/vscode.repo <<'EOF'
+[code]
+name=Visual Studio Code
+baseurl=https://packages.microsoft.com/yumrepos/vscode
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+EOF
+    say "$XT_INSTALL"
+    run pm_install code
+    ;;
+  *)
+    say "✗ vscode: sólo Debian/Ubuntu (apt) y Fedora/RHEL (dnf). $JHIN_OS no soportado (Electron glibc)."
+    return 1 2>/dev/null || exit 1
+    ;;
+esac
 
 say "$XT_DONE"
 code --version 2>/dev/null | head -1 || true

@@ -13,29 +13,52 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/mongodb) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/mongodb") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
-say "$XT_DEPS"
-run apt update
-run apt install -y curl gnupg ca-certificates
 
-CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
-case "$CODENAME" in
-  bookworm|bullseye) ;;
-  *) CODENAME=bookworm ;;
+# mongosh es glibc → no hay build musl oficial para Alpine.
+case "$JHIN_PM" in
+  apt)
+    say "$XT_DEPS"
+    run pm_update
+    run pm_install curl gnupg ca-certificates
+    CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
+    case "$CODENAME" in
+      bookworm|bullseye|trixie) ;;
+      *) CODENAME=bookworm ;;
+    esac
+    run curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc -o /tmp/mongo.asc
+    run bash -c "gpg --dearmor < /tmp/mongo.asc > /usr/share/keyrings/mongodb-server-7.0.gpg"
+    echo "deb [signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] http://repo.mongodb.org/apt/debian ${CODENAME}/mongodb-org/7.0 main" > /etc/apt/sources.list.d/mongodb-org-7.0.list
+    say "$XT_INSTALL"
+    run apt-get ${JHIN_APT_OPTS:-} update
+    run pm_install mongodb-mongosh
+    ;;
+  dnf)
+    case "$JHIN_ARCH" in amd64) MA="x86_64" ;; arm64) MA="aarch64" ;; *) jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;; esac
+    say "$XT_REPO_ADD"
+    cat > /etc/yum.repos.d/mongodb-org-7.0.repo <<EOF
+[mongodb-org-7.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/7.0/${MA}/
+gpgcheck=1
+enabled=1
+gpgkey=https://pgp.mongodb.com/server-7.0.asc
+EOF
+    say "$XT_INSTALL"
+    run pm_install mongodb-mongosh
+    ;;
+  *)
+    say "✗ mongodb: mongosh sólo glibc (apt/dnf). $JHIN_OS no soportado."
+    return 1 2>/dev/null || exit 1
+    ;;
 esac
-
-run curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc -o /tmp/mongo.asc
-run bash -c "gpg --dearmor < /tmp/mongo.asc > /usr/share/keyrings/mongodb-server-7.0.gpg"
-echo "deb [signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] http://repo.mongodb.org/apt/debian ${CODENAME}/mongodb-org/7.0 main" > /etc/apt/sources.list.d/mongodb-org-7.0.list
-
-say "$XT_INSTALL"
-run apt update
-run apt install -y mongodb-mongosh
 
 say "$XT_NOTE"
 say "$XT_DONE"

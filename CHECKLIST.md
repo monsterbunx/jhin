@@ -55,10 +55,10 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **tailscale** | repo apt/dnf/apk + binario estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **terraform** | repo hashicorp + zip estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **dotnet** | repo MS deb/dnf + dotnet-install.sh | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **vscode** | repo MS deb/dnf (Electron glibc) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ musl | ⚠️ | ⚠️ |
-| **dart** | repo apt Google (no fedora/alpine) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | ⚠️ | ⚠️ |
+| **vscode** | repo MS deb/dnf (Electron glibc) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
+| **dart** | repo apt Google (no fedora/alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
 | **php** | repo sury (Debian) / remi (Fedora) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
-| **mongodb** | repo apt/dnf mongodb (no alpine) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | ⚠️ | ⚠️ |
+| **mongodb** | repo apt/dnf mongodb (no alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
 
 ---
 
