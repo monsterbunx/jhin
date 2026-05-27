@@ -13,7 +13,9 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/go) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/go") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 sayf() { local f="$1"; shift; printf '%b\n' "$(printf "$f" "$@")"; }
@@ -21,17 +23,20 @@ run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
 
+# El tarball oficial necesita curl (para bajar) y tar/gzip (para extraer).
+run pm_update
+run pm_install curl ca-certificates tar gzip
+
 murl="https://go.dev/dl/"
 say "$XT_FETCH_VERSION"
-version=$(curl -s "$murl" | grep -oP '(go[0-9]+\.[0-9]+(\.[0-9]+)?)\.src\.tar\.gz' | sed 's/\.src\.tar\.gz//' | uniq | head -n 1)
+version=$(curl -s "$murl" | grep -oE 'go[0-9]+\.[0-9]+(\.[0-9]+)?\.src\.tar\.gz' | sed 's/\.src\.tar\.gz//' | uniq | head -n 1)
 sayf "$XT_VERSION" "$version"
 
-case "$(dpkg --print-architecture)" in
-  arm64) ark="linux-arm64" ;;
+case "$JHIN_ARCH" in
   amd64) ark="linux-amd64" ;;
-  i386)  ark="linux-386" ;;
+  arm64) ark="linux-arm64" ;;
   armhf) ark="linux-armv6l" ;;
-  *)     ark="arquitectura-no-soportada" ;;
+  *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
 esac
 sayf "$XT_ARCH" "$ark"
 

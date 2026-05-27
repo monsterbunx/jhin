@@ -26,7 +26,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **zig** | tarball ziglang.org (arch en URL) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | 🟡 | 🟡 | ✅ |
 | **scala** | coursier (cs nativo amd64 / JAR arm64) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | 🟡 | 🟡 | ✅ |
 | **swift** | tarball swift.org (glibc, Ubuntu build) | ⬜ | ⬜ | ✅ | ⚠️ | ⬜ | ⬜ | ❌ musl | ⚠️ | ✅ |
-| **go** | tarball go.dev (arch en URL) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ⚠️ usa dpkg |
+| **go** | tarball go.dev (arch en URL) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **gotty** | binario github (arch en URL) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | 🟡 |
 | **rust** | rustup.rs (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **bun** | bun.sh/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
@@ -83,8 +83,9 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
       bun ✅ (+libstdc++ libgcc), haskell ✅ (+gcompat), deno ❌ (solo binario glibc).
 
 ### Lote 3 — binario/tarball con arch en URL
-- [ ] go (cambiar `dpkg --print-architecture` → `$JHIN_ARCH`)
-- [ ] gotty, kotlin (deps por distro)
+- [x] go — `dpkg`→`$JHIN_ARCH` + `grep -oP`→`-oE` (busybox) — deb12/fedora/alpine + arm64 OK
+- [ ] gotty, kotlin (deps por distro; kotlin tiene `grep -oP \K` → portar a -oE)
+- [ ] python (compila; deps build por distro), typescript, prisma (post-nodejs)
 - [ ] python (compila; deps build por distro), typescript, prisma (post-nodejs)
 
 ### Lote 4 — repos de terceros (lo más duro; rama por PM)
