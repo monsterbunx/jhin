@@ -13,15 +13,23 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/ruby) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/ruby") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
 say "$XT_DEPS"
-run apt update
-run apt install -y ruby-full
+run pm_update
+case "$JHIN_PM" in
+  apt)    DEPS="ruby-full" ;;
+  dnf)    DEPS="ruby ruby-devel" ;;
+  apk)    DEPS="ruby ruby-dev" ;;
+  pacman) DEPS="ruby" ;;
+esac
+run pm_install $DEPS
 
 say "$XT_DONE"
 ruby --version

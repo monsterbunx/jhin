@@ -13,7 +13,9 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/haskell) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/haskell") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
@@ -21,8 +23,14 @@ run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt install -y build-essential libffi-dev libgmp-dev libncurses-dev zlib1g-dev curl ca-certificates
+run pm_update
+case "$JHIN_PM" in
+  apt)    DEPS="build-essential libffi-dev libgmp-dev libncurses-dev zlib1g-dev curl ca-certificates" ;;
+  dnf)    DEPS="gcc gcc-c++ make libffi-devel gmp-devel ncurses-devel zlib-devel curl ca-certificates" ;;
+  apk)    DEPS="build-base libffi-dev gmp-dev ncurses-dev zlib-dev curl ca-certificates gcompat" ;;
+  pacman) DEPS="base-devel libffi gmp ncurses zlib curl ca-certificates" ;;
+esac
+run pm_install $DEPS
 
 say "$XT_INSTALL"
 export BOOTSTRAP_HASKELL_NONINTERACTIVE=1

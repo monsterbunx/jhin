@@ -13,16 +13,30 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/deno) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/deno") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# Alpine (musl): el binario oficial de deno.land es glibc (gcompat no alcanza,
+# faltan símbolos del resolver). Pero el repo community trae un build musl nativo.
+if [ "$JHIN_OS" = "alpine" ]; then
+  say "$XT_TITLE"
+  say "$XT_DEPS"
+  run pm_update
+  run pm_install deno
+  say "$XT_DONE"
+  deno --version
+  return 0 2>/dev/null || exit 0
+fi
+
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt install -y curl unzip ca-certificates
+run pm_update
+run pm_install curl unzip ca-certificates
 
 say "$XT_INSTALL"
 if [ "$VERBOSE" = "1" ]; then

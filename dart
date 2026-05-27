@@ -13,30 +13,41 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/dart) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/dart") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# El repo apt de Google es amd64-only; el SDK zip cubre amd64+arm64 y cualquier
+# distro glibc. En Alpine (musl) el SDK glibc corre con gcompat + libstdc++
+# (verificado: dart run y dart compile exe funcionan).
+case "$JHIN_ARCH" in
+  amd64) DART_ARCH="x64" ;;
+  arm64) DART_ARCH="arm64" ;;
+  *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
+esac
+case "$JHIN_PM" in
+  apk) DEPS="curl ca-certificates unzip gcompat libstdc++" ;;
+  *)   DEPS="curl ca-certificates unzip" ;;
+esac
+
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt install -y gnupg apt-transport-https ca-certificates curl
-
-say "$XT_KEYRING"
-run curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/dart.gpg.key
-gpg --batch --yes --dearmor < /tmp/dart.gpg.key > /usr/share/keyrings/dart.gpg
-rm -f /tmp/dart.gpg.key
-
-say "$XT_REPO_ADD"
-echo "deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main" > /etc/apt/sources.list.d/dart_stable.list
-
-say "$XT_REPO_UPDATE"
-run apt update
+run pm_update
+run pm_install $DEPS
 
 say "$XT_INSTALL"
-run apt install -y dart
+td=$(mktemp -d)
+URL="https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-${DART_ARCH}-release.zip"
+run curl -fL -o "$td/dart.zip" "$URL"
+rm -rf /usr/local/dart-sdk
+run unzip -o "$td/dart.zip" -d /usr/local
+ln -sf /usr/local/dart-sdk/bin/dart /usr/local/bin/dart
+rm -rf "$td"
+export PATH="/usr/local/dart-sdk/bin:$PATH"
 
 say "$XT_DONE"
 dart --version 2>&1

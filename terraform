@@ -1,5 +1,5 @@
 #!/bin/bash
-# jhin/terraform — instalador Terraform vía repo HashiCorp.
+# jhin/terraform — Terraform vía zip estático oficial (cross-distro + multi-arch).
 # Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/terraform) [lang] [-v]
 
 LANG_ARG=""
@@ -13,30 +13,33 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/terraform) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/terraform") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# El zip oficial es un binario Go estático → cualquier distro/arch, sin repo apt.
+case "$JHIN_ARCH" in
+  amd64) TF_ARCH="amd64" ;;
+  arm64) TF_ARCH="arm64" ;;
+  armhf) TF_ARCH="arm" ;;
+  *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
+esac
+
 say "$XT_TITLE"
-
 say "$XT_DEPS"
-run apt update
-run apt install -y gnupg lsb-release ca-certificates curl
-
-say "$XT_KEYRING"
-run curl -fsSL https://apt.releases.hashicorp.com/gpg -o /tmp/hashicorp.gpg.key
-gpg --batch --yes --dearmor < /tmp/hashicorp.gpg.key > /usr/share/keyrings/hashicorp-archive-keyring.gpg
-rm -f /tmp/hashicorp.gpg.key
-
-say "$XT_REPO_ADD"
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
-
-say "$XT_REPO_UPDATE"
-run apt update
+run pm_update
+run pm_install curl ca-certificates unzip
 
 say "$XT_INSTALL"
-run apt install -y terraform
+TF_VER=$(curl -fsSL "https://api.releases.hashicorp.com/v1/releases/terraform/latest" | grep -oE '"version":"[0-9.]+"' | head -1 | sed -E 's/.*"([0-9.]+)".*/\1/')
+td=$(mktemp -d)
+run curl -fL -o "$td/tf.zip" "https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_${TF_ARCH}.zip"
+run unzip -o "$td/tf.zip" -d /usr/local/bin
+chmod +x /usr/local/bin/terraform
+rm -rf "$td"
 
 say "$XT_DONE"
 terraform --version | head -1

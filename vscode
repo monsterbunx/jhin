@@ -1,5 +1,11 @@
 #!/bin/bash
-# jhin/vscode — instalador VS Code (Microsoft, escritorio real) vía repo packages.microsoft.com.
+# jhin/vscode — instalador VS Code.
+#   Debian/Ubuntu (apt) y Fedora/RHEL (dnf): VS Code escritorio de Microsoft
+#     (Electron) vía repo packages.microsoft.com.
+#   Alpine (apk): VS Code escritorio es Electron→glibc y no corre en musl. Se
+#     instala code-server (VS Code en el navegador, mismo editor "Code - OSS"),
+#     tarball oficial de coder, usando el node musl de Alpine. Verificado:
+#     arranca el servidor HTTP y sirve el workbench en alpine:3.20.
 # Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/vscode) [lang] [-v]
 
 LANG_ARG=""
@@ -13,27 +19,79 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/vscode) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/vscode") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
 
-say "$XT_DEPS"
-run apt update
-run apt install -y --no-install-recommends \
-    curl gnupg apt-transport-https ca-certificates
-
-say "$XT_REPO"
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
-  | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg 2>/dev/null
-echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
-  > /etc/apt/sources.list.d/vscode.list
-
-say "$XT_INSTALL"
-run apt update
-run apt install -y --no-install-recommends code
+# VS Code escritorio (Electron) es glibc → no corre en Alpine (musl). En Alpine
+# instalamos code-server (mismo editor, en el navegador) con el node musl nativo.
+case "$JHIN_PM" in
+  apk)
+    case "$JHIN_ARCH" in
+      amd64) CS_ARCH="amd64" ;;
+      arm64) CS_ARCH="arm64" ;;
+      armhf) CS_ARCH="armv7l" ;;
+      *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
+    esac
+    # 4.100.x es la última serie que apunta a Node 20 (el que trae Alpine 3.20).
+    CS_VER="4.100.3"
+    say "$XT_DEPS"
+    run pm_update
+    run pm_install curl ca-certificates nodejs npm libstdc++ libgcc
+    say "$XT_INSTALL"
+    td=$(mktemp -d)
+    URL="https://github.com/coder/code-server/releases/download/v${CS_VER}/code-server-${CS_VER}-linux-${CS_ARCH}.tar.gz"
+    run curl -fL -o "$td/code-server.tgz" "$URL"
+    rm -rf /opt/code-server
+    mkdir -p /opt/code-server
+    run tar -xzf "$td/code-server.tgz" -C /opt/code-server --strip-components=1
+    rm -rf "$td"
+    # El tarball trae un node glibc en lib/node; lo reemplazamos por el node musl
+    # de Alpine para que corra (los módulos JS puros funcionan; el editor sirve).
+    rm -f /opt/code-server/lib/node
+    ln -sf "$(command -v node)" /opt/code-server/lib/node
+    ln -sf /opt/code-server/bin/code-server /usr/local/bin/code-server
+    say "$XT_DONE"
+    code-server --version 2>/dev/null | head -1 || true
+    return 0 2>/dev/null || exit 0
+    ;;
+  apt)
+    say "$XT_DEPS"
+    run pm_update
+    run pm_install curl gnupg ca-certificates
+    say "$XT_REPO"
+    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
+      | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg 2>/dev/null
+    echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
+      > /etc/apt/sources.list.d/vscode.list
+    say "$XT_INSTALL"
+    run apt-get ${JHIN_APT_OPTS:-} update
+    run pm_install code
+    ;;
+  dnf)
+    say "$XT_REPO"
+    run rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    cat > /etc/yum.repos.d/vscode.repo <<'EOF'
+[code]
+name=Visual Studio Code
+baseurl=https://packages.microsoft.com/yumrepos/vscode
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+EOF
+    say "$XT_INSTALL"
+    run pm_install code
+    ;;
+  *)
+    say "✗ vscode: sólo Debian/Ubuntu (apt) y Fedora/RHEL (dnf). $JHIN_OS no soportado (Electron glibc)."
+    return 1 2>/dev/null || exit 1
+    ;;
+esac
 
 say "$XT_DONE"
 code --version 2>/dev/null | head -1 || true

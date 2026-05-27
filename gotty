@@ -13,22 +13,23 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/gotty) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/gotty") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
 say "$XT_DEPS"
-run apt update
-run apt install -y curl ca-certificates tar
+run pm_update
+run pm_install curl ca-certificates tar
 
 GOTTY_VER="v1.5.0"
-ARCH="$(uname -m)"
-case "$ARCH" in
-  x86_64)  GOTTY_ARCH="amd64" ;;
-  aarch64|arm64) GOTTY_ARCH="arm64" ;;
-  *) GOTTY_ARCH="amd64" ;;
+case "$JHIN_ARCH" in
+  amd64) GOTTY_ARCH="amd64" ;;
+  arm64) GOTTY_ARCH="arm64" ;;
+  *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
 esac
 
 td=$(mktemp -d)

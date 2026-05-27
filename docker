@@ -15,8 +15,10 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-# --- carga klors + strings i18n ---
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/docker) "$LANG_ARG"
+# --- carga pm.sh + klors + strings i18n ---
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/docker") "$LANG_ARG"
 
 # --- helpers ---
 say()  { printf '%b\n' "$1"; }
@@ -25,54 +27,23 @@ run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 # --- install ---
 say "$XT_TITLE"
-say "$XT_DEPS_CHECK"
+sayf "$XT_OS_DETECTED" "$JHIN_OS" "-" "$JHIN_ARCH"
 
-check(){
-  if dpkg -l "$1" 2>/dev/null | grep -q '^ii'; then
-    sayf "$XT_DEP_OK" "$1"
+# Alpine: Docker está en el repo community (apk). Resto: script oficial
+# get.docker.com (maneja debian/ubuntu/fedora/centos + arch automáticamente).
+say "$XT_INSTALL"
+if [ "$JHIN_OS" = "alpine" ]; then
+  run pm_update
+  run pm_install docker docker-cli docker-cli-compose
+else
+  run pm_update
+  run pm_install curl ca-certificates
+  if [ "$VERBOSE" = "1" ]; then
+    curl -fsSL https://get.docker.com | sh
   else
-    sayf "$XT_DEP_INSTALL" "$1"
-    run apt install -y "$1"
+    curl -fsSL https://get.docker.com | sh >/dev/null 2>&1
   fi
-}
-
-check iptables
-check curl
-check dbus-user-session
-
-sabor=$(grep 'VERSION_CODENAME' /etc/os-release | cut -d= -f2)
-so=$(grep '^ID=' /etc/os-release | cut -d= -f2)
-arch=$(dpkg --print-architecture)
-sayf "$XT_OS_DETECTED" "$so" "$sabor" "$arch"
-
-url="https://download.docker.com/linux/$so/dists/$sabor/pool/stable/$arch"
-
-say "$XT_LIST_INDEX"
-content=$(curl -s "$url/")
-
-td=$(mktemp -d)
-Dwnld(){
-  local pkg="$1"
-  local names=$(echo "$content" | grep -oP '(?<=href=")[^"]*'"$pkg"'[^"]*\.deb' | sort -V | tail -n 1)
-  sayf "$XT_DOWNLOAD" "$names"
-  run curl -L -o "$td/$names" "$url/$names"
-  sayf "$XT_INSTALL_DEB" "$names"
-  run dpkg -i "$td/$names"
-}
-
-Dwnld containerd
-Dwnld docker-buildx-plugin
-Dwnld docker-ce-cli
-Dwnld docker-ce-rootless-extras
-Dwnld docker-ce
-Dwnld docker-compose-plugin
-Dwnld docker-scan-plugin
-Dwnld docker-model-plugin
-
-rm -rf "$td"
-
-say "$XT_FIX_BROKEN"
-run apt --fix-broken install -y
+fi
 
 # DinD support: si corremos dentro de un contenedor, no hay systemd que arranque
 # dockerd tras el dpkg. Lo lanzamos en background y esperamos al socket.
@@ -98,4 +69,8 @@ if [ -f /.dockerenv ] || grep -qE 'docker|containerd' /proc/1/cgroup 2>/dev/null
 fi
 
 say "$XT_DONE"
-docker version
+# `docker version` (cliente+servidor) requiere daemon; en instalación sin
+# privilegios mostramos sólo el cliente. El daemon lo arranca el bloque DinD
+# de arriba cuando hay privilegios.
+docker --version
+docker version 2>/dev/null || true

@@ -13,20 +13,32 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/kotlin) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/kotlin") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 sayf() { local f="$1"; shift; printf '%b\n' "$(printf "$f" "$@")"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# JRE por distro (kotlinc corre sobre JVM, arch-independiente).
+case "$JHIN_PM" in
+  apt)    JRE_PKG="default-jre" ;;
+  dnf)    JRE_PKG="java-latest-openjdk-headless" ;;
+  apk)    JRE_PKG="openjdk17-jre" ;;
+  pacman) JRE_PKG="jre-openjdk" ;;
+  *)      JRE_PKG="default-jre" ;;
+esac
+
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt install -y default-jre unzip curl ca-certificates
+run pm_update
+run pm_install "$JRE_PKG" unzip curl ca-certificates
 
 say "$XT_FETCH_VERSION"
-KOT_VER=$(curl -sSL https://api.github.com/repos/JetBrains/kotlin/releases/latest | grep -oP '"tag_name":\s*"v\K[^"]+' | head -1)
+# grep -oE (busybox/Alpine no soporta -P/\K): extrae la versión del tag_name.
+KOT_VER=$(curl -sSL https://api.github.com/repos/JetBrains/kotlin/releases/latest | grep -oE '"tag_name": *"v[^"]+"' | head -1 | sed -E 's/.*"v([^"]+)".*/\1/')
 sayf "$XT_VERSION" "$KOT_VER"
 
 td=$(mktemp -d)

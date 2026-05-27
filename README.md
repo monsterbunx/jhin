@@ -166,6 +166,7 @@ Detecta DinD automáticamente: si corre dentro de un contenedor, configura `stor
 ```
 jhin/<tool>            ← lógica de instalación (parsea args, llama a XT/<tool>, usa XT_*)
    ↓ source
+jhin/XT/pm.sh          ← detecta OS/arch/PM; expone pm_install, pm_update, $JHIN_ARCH…
 jhin/XT/<tool>         ← loader: trae klors + xtractor/<tool>/<lang>
    ↓ source
 klors/klors            ← funciones c_red, c_ok, etc.
@@ -173,6 +174,29 @@ xtractor/<tool>/<lang> ← variables XT_TITLE, XT_DOWNLOAD, etc. (ya coloreadas)
 ```
 
 Cada capa es sourceable vía `curl-pipe`, sin instalación previa.
+
+## Multiplataforma (OS × arquitectura)
+
+`XT/pm.sh` abstrae el package manager y la arquitectura, así un mismo
+instalador corre en varias distros y arches:
+
+- **OS**: Debian/Ubuntu (`apt`), Fedora/RHEL (`dnf`), Alpine (`apk`), Arch (`pacman`).
+- **Arch**: `amd64` (x86_64) y `arm64` (aarch64). `$JHIN_ARCH` normaliza `uname -m`.
+
+El mapa de nombres de paquetes entre distros está en [`XT/pm-aliases.md`](XT/pm-aliases.md).
+No todos los tools soportan todo (ej. `swift` es glibc-only → no Alpine).
+
+### Probar la matriz localmente
+
+`scripts/test-matrix.sh` sourcea la copia **local** del repo (`JHIN_BASE=file://`)
+dentro de contenedores efímeros, sin necesidad de publicar a Pages:
+
+```sh
+# cross-arch necesita binfmt una vez:
+sg docker -c "docker run --rm --privileged tonistiigi/binfmt --install all"
+
+TOOLS="nodejs zig" DISTROS="debian:13" ARCHES="amd64 arm64" scripts/test-matrix.sh
+```
 
 ## Probar localmente
 
