@@ -21,7 +21,13 @@ say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 # Swift.org publica builds glibc para Ubuntu (compatibles con Debian). Alpine usa
-# musl → incompatible. Fedora necesita un build distinto. Por ahora: solo Debian/Ubuntu.
+# musl → incompatible y NO hay camino:
+#   - no existe paquete `swift` en apk (ni main/community/testing/edge);
+#   - el Static Linux SDK (musl) es sólo para CROSS-compilar desde un host glibc,
+#     el compilador en sí sigue siendo glibc y no corre en Alpine;
+#   - no hay build community musl precompilado del toolchain;
+#   - compilar Swift desde fuente es inviable (horas/GB) — descartado.
+# Fedora necesita un build distinto. Por ahora: solo Debian/Ubuntu.
 if [ "$JHIN_OS" != "debian" ]; then
   say "✗ swift: por ahora solo Debian/Ubuntu (glibc). $JHIN_OS no soportado."
   return 1 2>/dev/null || exit 1

@@ -22,7 +22,15 @@ run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
 say "$XT_TITLE"
 
-# mongosh es glibc → no hay build musl oficial para Alpine.
+# mongosh es glibc → no hay camino musl en Alpine:
+#   - apk sólo trae `mongodb-tools` (dump/export/import/...), NO el shell mongosh.
+#   - Todos los tarballs de github.com/mongodb-js/mongosh son glibc (x64/arm64/...).
+#   - gcompat carga el binario pero faltan los símbolos del resolver de glibc
+#     (__res_nsearch / __dn_expand) → error de relocación al cargar.
+#   - La shim de glibc (sgerrand 2.35, discontinuada) segfaultea con el runtime
+#     Node moderno de mongosh.
+#   - `npm install -g mongosh` crashea por bindings nativos musl.
+# → Alpine no soportado (cae al caso *).
 case "$JHIN_PM" in
   apt)
     say "$XT_DEPS"
