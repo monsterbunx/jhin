@@ -13,22 +13,32 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/python) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/python") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 sayf() { local f="$1"; shift; printf '%b\n' "$(printf "$f" "$@")"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+# Dependencias de build de CPython por distro (los -dev/-devel divergen).
+case "$JHIN_PM" in
+  apt)    DEPS="build-essential wget curl libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses-dev xz-utils tk-dev libffi-dev liblzma-dev libgdbm-dev libdb-dev" ;;
+  dnf)    DEPS="gcc gcc-c++ make wget curl openssl-devel zlib-devel bzip2-devel readline-devel sqlite-devel llvm ncurses-devel xz xz-devel tk-devel libffi-devel gdbm-devel libdb-devel" ;;
+  apk)    DEPS="build-base wget curl openssl-dev zlib-dev bzip2-dev readline-dev sqlite-dev llvm ncurses-dev xz xz-dev tk-dev libffi-dev gdbm-dev db-dev" ;;
+  pacman) DEPS="base-devel wget curl openssl zlib bzip2 readline sqlite llvm ncurses xz tk libffi gdbm" ;;
+esac
+
 say "$XT_TITLE"
 
 say "$XT_DEPS"
-run apt update
-run apt upgrade -y
-run apt install -y build-essential wget libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev libgdbm-dev libdb-dev curl
+run pm_update
+run pm_install $DEPS
 
 base="https://www.python.org/ftp/python"
 say "$XT_FETCH_VERSION"
-version=$(curl -s "$base/" | grep -oP '\d\.\d+\.\d+(?=/)' | sort -u -Vr | sed -n '2p')
+# grep -oE (busybox/Alpine sin PCRE): versiones X.Y.Z seguidas de '/'.
+version=$(curl -s "$base/" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+/' | sed 's:/::' | sort -u -Vr | sed -n '2p')
 sayf "$XT_VERSION" "$version"
 
 td=$(mktemp -d)

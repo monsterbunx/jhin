@@ -27,12 +27,12 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **scala** | coursier (cs nativo amd64 / JAR arm64) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | 🟡 | 🟡 | ✅ |
 | **swift** | tarball swift.org (glibc, Ubuntu build) | ⬜ | ⬜ | ✅ | ⚠️ | ⬜ | ⬜ | ❌ musl | ⚠️ | ✅ |
 | **go** | tarball go.dev (arch en URL) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
-| **gotty** | binario github (arch en URL) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | 🟡 |
+| **gotty** | binario github (arch en URL) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **rust** | rustup.rs (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **bun** | bun.sh/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **deno** | deno.land/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
 | **haskell** | ghcup (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **kotlin** | zip github (JVM, arch-indep) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | 🟡 |
+| **kotlin** | zip github (JVM, arch-indep) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **crystal** | install.sh (apt/yum interno) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | 🟡 | ⚠️ |
 | **cpp** | paquete distro (build-essential/clang) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **git** | paquete distro | ✅ | ✅ | ✅ | ✅ | ⚠️ | ✅ | ✅ | ✅ | ➖ |
@@ -49,8 +49,8 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **mysql** | cliente distro (mariadb-client) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **postgres** | paquete distro (postgresql) | 🟡 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **python** | compila CPython desde fuente | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | 🟡 | 🟡 |
-| **typescript** | npm -g (requiere nodejs) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
-| **prisma** | npm -g (requiere nodejs) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 | ➖ |
+| **typescript** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
+| **prisma** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **docker** | .deb + binarios estáticos | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
 | **tailscale** | repo apt/dnf/apk + binario estático | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
 | **terraform** | repo hashicorp + zip estático | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
@@ -85,7 +85,8 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 ### Lote 3 — binario/tarball con arch en URL
 - [x] go — `dpkg`→`$JHIN_ARCH` + `grep -oP`→`-oE` (busybox) — deb12/fedora/alpine + arm64 OK
 - [ ] gotty, kotlin (deps por distro; kotlin tiene `grep -oP \K` → portar a -oE)
-- [ ] python (compila; deps build por distro), typescript, prisma (post-nodejs)
+- [x] typescript, prisma (nodejs por distro/jhin) — deb12/fedora/alpine OK
+- [~] python (compila CPython; deps build por distro) — validando compile en 3 distros
 
 ### Lote 4 — repos de terceros (lo más duro; rama por PM)
 - [ ] docker, tailscale, terraform (tienen binario estático → preferirlo cross-distro)
