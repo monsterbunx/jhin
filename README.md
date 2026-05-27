@@ -4,8 +4,10 @@
 
 Copia funcional de [nyaweb/nya](https://github.com/nyaweb/nya) con i18n + verbose toggle. Cada archivo es un instalador shell que se aplica con `. <(curl -fsSL ...) [lang] [-v]`.
 
-- **`lang`** — idioma de los mensajes (default: `es`). Strings cargados de [xtractor](https://github.com/monsterbunx/xtractor), coloreados con [klors](https://github.com/monsterbunx/klors).
-- **`-v` / `--verbose`** — muestra la salida cruda de `apt`/`curl`/`dpkg`/`make` además de los mensajes traducidos. Sin `-v`, los comandos corren silenciados.
+**Multiplataforma:** los 37 instaladores corren en **Debian 10/11/12/13, Kali, Ubuntu, Alpine y Fedora** × **amd64 + arm64**, vía la capa de abstracción [`XT/pm.sh`](XT/pm.sh) (detecta OS, arquitectura y package manager). Ver [`CHECKLIST.md`](CHECKLIST.md).
+
+- **`lang`** — idioma de los mensajes (default: `es`). 15 idiomas disponibles: `es en pt fr de it ru pl tr nl zh ja ko ar hi`; fallback a `es` si el pedido no existe. Strings de [xtractor](https://github.com/monsterbunx/xtractor), coloreados con [klors](https://github.com/monsterbunx/klors).
+- **`-v` / `--verbose`** — muestra la salida cruda de los comandos (`apt`/`dnf`/`apk`/`curl`/`make`…) además de los mensajes traducidos. Sin `-v`, los comandos corren silenciados.
 
 ## Docker
 ```bash
@@ -208,6 +210,13 @@ docker exec -it jhin bash   # entra al contenedor
 . <(curl -fsSL https://monsterbunx.github.io/jhin/go) es -v
 ```
 
-## Añadir un idioma
+## Idiomas
 
-Drop file en `xtractor/<app>/<lang>` con las mismas keys `XT_*` que `xtractor/<app>/es`. El loader `xt-<app>` cae back a `es` si el lang pedido no existe.
+15 disponibles: `es en pt fr de it ru pl tr nl zh ja ko ar hi`. Para añadir uno,
+drop file en `xtractor/<app>/<lang>` con las mismas keys `XT_*` que `xtractor/<app>/es`.
+El loader `XT/<app>` hace fallback a `es` si el lang pedido no existe.
+
+```sh
+. <(curl -fsSL https://monsterbunx.github.io/jhin/go) de    # alemán
+. <(curl -fsSL https://monsterbunx.github.io/jhin/go) ja    # japonés
+```
