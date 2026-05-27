@@ -30,7 +30,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **gotty** | binario github (arch en URL) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **rust** | rustup.rs (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **bun** | bun.sh/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
-| **deno** | deno.land/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | ✅ |
+| **deno** | deno.land/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **haskell** | ghcup (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **kotlin** | zip github (JVM, arch-indep) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **crystal** | install.sh (apt/yum interno) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
@@ -56,7 +56,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **terraform** | repo hashicorp + zip estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **dotnet** | repo MS deb/dnf + dotnet-install.sh | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **vscode** | repo MS deb/dnf (Electron glibc) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
-| **dart** | repo apt Google (no fedora/alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | ✅ |
+| **dart** | repo apt Google (no fedora/alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **php** | repo sury (Debian) / remi (Fedora) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **mongodb** | repo apt/dnf mongodb (no alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
 
@@ -80,7 +80,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 
 ### Lote 2 — script oficial auto-arch (curl|bash, multi-distro casi gratis)
 - [x] rust, bun, deno, haskell — deb12/fedora OK. Alpine: rust ✅ (build-base),
-      bun ✅ (+libstdc++ libgcc), haskell ✅ (+gcompat), deno ❌ (solo binario glibc).
+      bun ✅ (+libstdc++ libgcc), haskell ✅ (+gcompat), deno ✅ (apk community musl).
 
 ### Lote 3 — binario/tarball con arch en URL
 - [x] go — `dpkg`→`$JHIN_ARCH` + `grep -oP`→`-oE` (busybox) — deb12/fedora/alpine + arm64 OK
@@ -92,14 +92,18 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 - [x] tailscale (tgz), terraform (zip), dotnet (dotnet-install.sh) — binario/script cross-distro
 - [x] docker (get.docker.com + apk alpine, DinD intacto) — deb12/fedora/alpine OK (cliente)
 - [x] crystal (install.sh deb/fedora + apk alpine), php (php-cli por distro) — deb12/fedora/alpine OK
-- [x] dart (SDK zip multi-arch), vscode (apt+dnf MS), mongodb (apt+dnf mongo) — deb12/fedora OK; alpine ❌ (glibc)
+- [x] dart (SDK zip multi-arch; Alpine vía gcompat+libstdc++), vscode (apt+dnf MS),
+      mongodb (apt+dnf mongo) — deb12/fedora OK; vscode/mongodb alpine ❌ (glibc)
 
 ---
 
 ## Notas de incompatibilidad conocidas
 
-- **Alpine (musl)**: swift, vscode, dart, mongodb, crystal → builds glibc, no
-  corren en musl. Marcar ❌ con motivo, no forzar.
+- **Alpine (musl)**: swift (toolchain glibc, sin build musl oficial), vscode
+  (Electron glibc + necesita X), mongodb/mongosh (binario glibc; el npm crashea
+  por bindings nativos) → ❌ con motivo, no forzar. **deno** sí funciona (paquete
+  community musl), **dart** sí (SDK glibc + `gcompat`+`libstdc++`, corre y
+  compila), **crystal** sí (paquete community).
 - **deb10 (buster)**: php-sury dejó de publicar; hashicorp/google idem →
   ❌ esperables en varios Lote 4.
 - **arm64**: tools que son solo "paquete distro" (➖) heredan el soporte arm64
@@ -126,6 +130,10 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 - **arm64 + musl** (oracle nativo): 14/14 en `alpine:3.20/arm64` — git, cpp,
   nodejs, zig, go, rust, bun, haskell, crystal, docker, php, tailscale,
   terraform, dotnet. El combo más difícil (musl + arm64) pasa entero.
-- **Hallazgos musl (Alpine)**: zig (estático) y rust/haskell/bun corren con las
-  libs runtime correctas; nodejs y deno NO (solo binario glibc) → fallback apk
-  (nodejs) o ❌ (deno).
+- **Hallazgos musl (Alpine)** — estrategias por tool:
+  - **estático/musl-nativo**: zig, go, gotty, tailscale, terraform (corren sin más).
+  - **+libs runtime**: bun (+libstdc++ libgcc), haskell (+gcompat), dotnet (+icu-libs).
+  - **paquete community musl**: nodejs (apk nodejs), deno (apk deno), crystal (apk crystal).
+  - **gcompat (shim glibc, verificado que corre/compila)**: dart.
+  - **sin camino musl → ❌**: swift (toolchain glibc), vscode (Electron glibc),
+    mongodb/mongosh (binario glibc; npm crashea por bindings nativos).

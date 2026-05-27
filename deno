@@ -20,11 +20,16 @@ JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
-# Alpine (musl): deno solo publica binario glibc. gcompat no alcanza (faltan
-# símbolos del resolver glibc, __res_init…). No soportado.
+# Alpine (musl): el binario oficial de deno.land es glibc (gcompat no alcanza,
+# faltan símbolos del resolver). Pero el repo community trae un build musl nativo.
 if [ "$JHIN_OS" = "alpine" ]; then
-  say "✗ deno: no soportado en Alpine (musl) — solo hay binario glibc oficial."
-  return 1 2>/dev/null || exit 1
+  say "$XT_TITLE"
+  say "$XT_DEPS"
+  run pm_update
+  run pm_install deno
+  say "$XT_DONE"
+  deno --version
+  return 0 2>/dev/null || exit 0
 fi
 
 say "$XT_TITLE"
