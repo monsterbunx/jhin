@@ -55,7 +55,7 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **tailscale** | repo apt/dnf/apk + binario estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **terraform** | repo hashicorp + zip estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **dotnet** | repo MS deb/dnf + dotnet-install.sh | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
-| **vscode** | repo MS deb/dnf (Electron glibc) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
+| **vscode** | MS deb/dnf · code-server (apk, node musl) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **dart** | repo apt Google (no fedora/alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **php** | repo sury (Debian) / remi (Fedora) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **mongodb** | repo apt/dnf mongodb (no alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
@@ -99,11 +99,15 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 
 ## Notas de incompatibilidad conocidas
 
-- **Alpine (musl)**: swift (toolchain glibc, sin build musl oficial), vscode
-  (Electron glibc + necesita X), mongodb/mongosh (binario glibc; el npm crashea
-  por bindings nativos) → ❌ con motivo, no forzar. **deno** sí funciona (paquete
-  community musl), **dart** sí (SDK glibc + `gcompat`+`libstdc++`, corre y
-  compila), **crystal** sí (paquete community).
+- **Alpine (musl)**: swift (toolchain glibc, sin build musl oficial ni paquete
+  apk) y mongodb/mongosh (binario glibc; gcompat no aporta los símbolos del
+  resolver `__res_nsearch`/`__dn_expand` y segfaultea con la shim de glibc) →
+  ❌ con motivo, no forzar. **vscode** sí: en Alpine se instala code-server
+  (mismo editor en navegador) con el tarball oficial + el node musl de Alpine
+  (se reemplaza el node glibc del bundle) — verificado: el servidor HTTP
+  arranca y sirve el workbench. **deno** sí (paquete community musl), **dart**
+  sí (SDK glibc + `gcompat`+`libstdc++`, corre y compila), **crystal** sí
+  (paquete community).
 - **deb10 (buster)**: php-sury dejó de publicar; hashicorp/google idem →
   ❌ esperables en varios Lote 4.
 - **arm64**: tools que son solo "paquete distro" (➖) heredan el soporte arm64
@@ -135,5 +139,9 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
   - **+libs runtime**: bun (+libstdc++ libgcc), haskell (+gcompat), dotnet (+icu-libs).
   - **paquete community musl**: nodejs (apk nodejs), deno (apk deno), crystal (apk crystal).
   - **gcompat (shim glibc, verificado que corre/compila)**: dart.
-  - **sin camino musl → ❌**: swift (toolchain glibc), vscode (Electron glibc),
-    mongodb/mongosh (binario glibc; npm crashea por bindings nativos).
+  - **tarball + node musl de Alpine (se reemplaza el node glibc del bundle)**:
+    vscode→code-server (4.100.x, última serie Node 20; arranca y sirve HTTP).
+  - **sin camino musl → ❌**: swift (toolchain glibc, sin apk ni build community),
+    mongodb/mongosh (binario glibc; gcompat sin `__res_nsearch`/`__dn_expand`,
+    glibc-shim segfaultea; el npm crashea por bindings nativos; apk sólo trae
+    `mongodb-tools` = dump/export, no shell interactivo).
