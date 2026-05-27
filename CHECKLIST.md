@@ -3,6 +3,10 @@
 Objetivo: cada instalador funciona en **Debian 10/11/12/13, Kali, Ubuntu,
 Alpine, Fedora** × **amd64 + arm64**.
 
+> **Estado:** 37 instaladores migrados a `XT/pm.sh` y en `main`. i18n en 15
+> idiomas (es en pt fr de it ru pl tr nl zh ja ko ar hi). Solo 2 ❌ irreducibles
+> (swift/mongodb en Alpine: sin build musl). arm64 validado nativo en oracle.
+
 Validación: `scripts/test-matrix.sh` (contenedores efímeros, `JHIN_BASE=file://`).
 
 **Leyenda:** ✅ probado OK · 🟡 migrado, sin probar aún · ⬜ pendiente de migrar ·
