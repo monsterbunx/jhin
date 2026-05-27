@@ -22,17 +22,17 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 
 | Tool | Método de instalación | deb10 | deb11 | deb12 | deb13 | kali | ubu | alp | fed | arm64 |
 |------|----------------------|:----:|:----:|:----:|:----:|:----:|:---:|:---:|:---:|:----:|
-| **nodejs** | tarball nodejs.org (arch en URL) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | 🟡 | 🟡 | ✅ |
-| **zig** | tarball ziglang.org (arch en URL) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | 🟡 | 🟡 | ✅ |
+| **nodejs** | tarball nodejs.org (arch en URL) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | ✅ | 🟡 | ✅ |
+| **zig** | tarball ziglang.org (arch en URL) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | ✅ | 🟡 | ✅ |
 | **scala** | coursier (cs nativo amd64 / JAR arm64) | ⬜ | ⬜ | ✅ | ✅ | ⬜ | ⬜ | 🟡 | 🟡 | ✅ |
 | **swift** | tarball swift.org (glibc, Ubuntu build) | ⬜ | ⬜ | ✅ | ⚠️ | ⬜ | ⬜ | ❌ musl | ⚠️ | ✅ |
 | **go** | tarball go.dev (arch en URL) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
-| **gotty** | binario github (arch en URL) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **rust** | rustup.rs (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **bun** | bun.sh/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **deno** | deno.land/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
-| **haskell** | ghcup (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **kotlin** | zip github (JVM, arch-indep) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
+| **gotty** | binario github (arch en URL) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
+| **rust** | rustup.rs (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
+| **bun** | bun.sh/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
+| **deno** | deno.land/install (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | ✅ |
+| **haskell** | ghcup (script, auto-arch) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
+| **kotlin** | zip github (JVM, arch-indep) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **crystal** | install.sh (apt/yum interno) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **cpp** | paquete distro (build-essential/clang) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ➖ |
 | **git** | paquete distro | ✅ | ✅ | ✅ | ✅ | ⚠️ | ✅ | ✅ | ✅ | ➖ |
@@ -52,11 +52,11 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **typescript** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **prisma** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **docker** | .deb + binarios estáticos | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **tailscale** | repo apt/dnf/apk + binario estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **terraform** | repo hashicorp + zip estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
-| **dotnet** | repo MS deb/dnf + dotnet-install.sh | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
+| **tailscale** | repo apt/dnf/apk + binario estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
+| **terraform** | repo hashicorp + zip estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
+| **dotnet** | repo MS deb/dnf + dotnet-install.sh | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ✅ |
 | **vscode** | repo MS deb/dnf (Electron glibc) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
-| **dart** | repo apt Google (no fedora/alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
+| **dart** | repo apt Google (no fedora/alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | ✅ |
 | **php** | repo sury (Debian) / remi (Fedora) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **mongodb** | repo apt/dnf mongodb (no alpine) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ❌ | ✅ | 🟡 |
 
@@ -84,15 +84,15 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 
 ### Lote 3 — binario/tarball con arch en URL
 - [x] go — `dpkg`→`$JHIN_ARCH` + `grep -oP`→`-oE` (busybox) — deb12/fedora/alpine + arm64 OK
-- [ ] gotty, kotlin (deps por distro; kotlin tiene `grep -oP \K` → portar a -oE)
+- [x] gotty (uname→`$JHIN_ARCH`), kotlin (JRE por distro + `grep -oP`→`-oE`) — deb12/fedora/alpine OK
 - [x] typescript, prisma (nodejs por distro/jhin) — deb12/fedora/alpine OK
-- [~] python (compila CPython; deps build por distro) — validando compile en 3 distros
+- [x] python (compila CPython; deps build por distro + `grep -oP`→`-oE`) — deb12/fedora/alpine OK
 
 ### Lote 4 — repos de terceros (lo más duro; rama por PM)
-- [ ] docker, tailscale, terraform (tienen binario estático → preferirlo cross-distro)
-- [ ] dotnet (dotnet-install.sh script), vscode (deb/dnf, no alpine)
+- [x] tailscale (tgz), terraform (zip), dotnet (dotnet-install.sh) — binario/script cross-distro
+- [x] docker (get.docker.com + apk alpine, DinD intacto) — deb12/fedora/alpine OK (cliente)
 - [x] crystal (install.sh deb/fedora + apk alpine), php (php-cli por distro) — deb12/fedora/alpine OK
-- [~] dart, vscode, mongodb (apt/dnf + alpine ❌) — probando deb12/fedora
+- [x] dart (SDK zip multi-arch), vscode (apt+dnf MS), mongodb (apt+dnf mongo) — deb12/fedora OK; alpine ❌ (glibc)
 
 ---
 
@@ -117,9 +117,13 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 - **deb10/buster**: `git` y `cpp` OK vía `archive.debian.org` (fixup en `pm.sh`).
 - **kali-rolling**: `git` dio 404 transitorio (índice con `.deb` ya rotado);
   `cpp` OK. Mitigado con `Acquire::Retries=3` en `pm.sh`. Marcado ⚠️.
-- **arm64**: validado nativo-vía-qemu solo para Lote 0 (nodejs/zig/scala/swift).
-  Lote 2 (scripts auto-arch) marcado 🟡: el script baja el binario arm64 correcto
-  pero falta correrlo. Validación nativa pendiente en oracle.
+- **arm64**: validado **nativo en oracle** (aarch64, Ubuntu 20.04, docker sin
+  qemu) — 15/15 en `debian:12/arm64`: nodejs, zig, scala, swift, go, gotty,
+  rust, bun, deno, haskell, kotlin, tailscale, terraform, dotnet, dart. Los
+  tools "paquete distro" (➖) heredan arm64 del repo de la distro.
+- **arm64 + musl** (oracle nativo): 14/14 en `alpine:3.20/arm64` — git, cpp,
+  nodejs, zig, go, rust, bun, haskell, crystal, docker, php, tailscale,
+  terraform, dotnet. El combo más difícil (musl + arm64) pasa entero.
 - **Hallazgos musl (Alpine)**: zig (estático) y rust/haskell/bun corren con las
   libs runtime correctas; nodejs y deno NO (solo binario glibc) → fallback apk
   (nodejs) o ❌ (deno).
