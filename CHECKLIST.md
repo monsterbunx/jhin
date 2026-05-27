@@ -52,9 +52,9 @@ ubu `ubuntu:24.04` · alp `alpine:3.20` · fed `fedora:40`
 | **typescript** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **prisma** | npm -g (requiere nodejs) | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | ➖ |
 | **docker** | .deb + binarios estáticos | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
-| **tailscale** | repo apt/dnf/apk + binario estático | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
-| **terraform** | repo hashicorp + zip estático | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
-| **dotnet** | repo MS deb/dnf + dotnet-install.sh | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |
+| **tailscale** | repo apt/dnf/apk + binario estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
+| **terraform** | repo hashicorp + zip estático | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
+| **dotnet** | repo MS deb/dnf + dotnet-install.sh | 🟡 | 🟡 | ✅ | 🟡 | 🟡 | 🟡 | ✅ | ✅ | 🟡 |
 | **vscode** | repo MS deb/dnf (Electron glibc) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ musl | ⚠️ | ⚠️ |
 | **dart** | repo apt Google (no fedora/alpine) | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ❌ | ⚠️ | ⚠️ |
 | **php** | repo sury (Debian) / remi (Fedora) | ❌ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⚠️ | ⚠️ | ⚠️ |

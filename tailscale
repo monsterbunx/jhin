@@ -1,5 +1,5 @@
 #!/bin/bash
-# jhin/tailscale — Tailscale (binario + daemon) vía repo apt oficial pkgs.tailscale.com.
+# jhin/tailscale — Tailscale vía binario estático oficial (cross-distro + multi-arch).
 # Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/tailscale) [lang] [-v]
 
 LANG_ARG=""
@@ -13,28 +13,35 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/tailscale) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/tailscale") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
-say "$XT_TITLE"
-say "$XT_DEPS"
-run apt update
-run apt install -y curl gnupg ca-certificates
-
-CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
-case "$CODENAME" in
-  bookworm|bullseye|buster) ;;
-  *) CODENAME=bookworm ;;
+# El tgz estático (binarios Go) corre en cualquier distro/arch sin repo apt.
+case "$JHIN_ARCH" in
+  amd64) TS_ARCH="amd64" ;;
+  arm64) TS_ARCH="arm64" ;;
+  armhf) TS_ARCH="arm" ;;
+  *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
 esac
 
-run curl -fsSL "https://pkgs.tailscale.com/stable/debian/${CODENAME}.noarmor.gpg" -o /usr/share/keyrings/tailscale-archive-keyring.gpg
-run curl -fsSL "https://pkgs.tailscale.com/stable/debian/${CODENAME}.tailscale-keyring.list" -o /etc/apt/sources.list.d/tailscale.list
+say "$XT_TITLE"
+say "$XT_DEPS"
+run pm_update
+run pm_install curl ca-certificates tar
 
 say "$XT_INSTALL"
-run apt update
-run apt install -y tailscale
+TS_TGZ=$(curl -fsSL "https://pkgs.tailscale.com/stable/?mode=json" | grep -oE "tailscale_[0-9.]+_${TS_ARCH}\.tgz" | head -1)
+td=$(mktemp -d)
+run curl -fL -o "$td/ts.tgz" "https://pkgs.tailscale.com/stable/$TS_TGZ"
+run tar -xzf "$td/ts.tgz" -C "$td"
+mv "$td"/tailscale_*/tailscale  /usr/local/bin/tailscale
+mv "$td"/tailscale_*/tailscaled /usr/local/bin/tailscaled
+chmod +x /usr/local/bin/tailscale /usr/local/bin/tailscaled
+rm -rf "$td"
 
 say "$XT_NOTE"
 say "$XT_DONE"

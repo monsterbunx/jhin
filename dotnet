@@ -1,5 +1,5 @@
 #!/bin/bash
-# jhin/dotnet — instalador .NET SDK vía packages.microsoft.com.
+# jhin/dotnet — .NET SDK vía dotnet-install.sh oficial (cross-distro, auto-arch).
 # Uso (sourceado): . <(curl -fsSL https://monsterbunx.github.io/jhin/dotnet) [lang] [-v]
 
 LANG_ARG=""
@@ -13,29 +13,38 @@ for arg in "$@"; do
 done
 LANG_ARG="${LANG_ARG:-es}"
 
-. <(curl -fsSL https://monsterbunx.github.io/jhin/XT/dotnet) "$LANG_ARG"
+JHIN_BASE="${JHIN_BASE:-https://monsterbunx.github.io/jhin}"
+. <(curl -fsSL "$JHIN_BASE/XT/pm.sh")
+. <(curl -fsSL "$JHIN_BASE/XT/dotnet") "$LANG_ARG"
 
 say()  { printf '%b\n' "$1"; }
 run()  { if [ "$VERBOSE" = "1" ]; then "$@"; else "$@" >/dev/null 2>&1; fi; }
 
+case "$JHIN_ARCH" in
+  amd64) DOTNET_ARCH="x64" ;;
+  arm64) DOTNET_ARCH="arm64" ;;
+  *)     jhin_unsupported_arch; return 1 2>/dev/null || exit 1 ;;
+esac
+
+# Runtime: .NET necesita ICU (globalización); en Alpine además libstdc++/libgcc.
+# El script dotnet-install.sh detecta musl y baja el build linux-musl-<arch>.
+case "$JHIN_PM" in
+  apt)    DEPS="curl ca-certificates libicu-dev" ;;
+  dnf)    DEPS="curl ca-certificates libicu" ;;
+  apk)    DEPS="curl ca-certificates bash icu-libs libstdc++ libgcc" ;;
+  pacman) DEPS="curl ca-certificates icu" ;;
+esac
+
 say "$XT_TITLE"
-
 say "$XT_DEPS"
-run apt update
-run apt install -y wget ca-certificates
-
-say "$XT_REPO_DOWNLOAD"
-run wget -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
-
-say "$XT_REPO_INSTALL"
-run dpkg -i /tmp/packages-microsoft-prod.deb
-rm -f /tmp/packages-microsoft-prod.deb
-
-say "$XT_REPO_UPDATE"
-run apt update
+run pm_update
+run pm_install $DEPS
 
 say "$XT_INSTALL"
-run apt install -y dotnet-sdk-8.0
+run sh -c "curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 8.0 --architecture $DOTNET_ARCH --install-dir /usr/local/dotnet"
+ln -sf /usr/local/dotnet/dotnet /usr/local/bin/dotnet
+export DOTNET_ROOT=/usr/local/dotnet
+export PATH="/usr/local/dotnet:$PATH"
 
 say "$XT_DONE"
 dotnet --version
